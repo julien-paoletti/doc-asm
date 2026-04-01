@@ -1,0 +1,46 @@
+.checklist-editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  padding: 8px 16px 12px;
+  gap: 2px;
+}
+
+.checklist-editor__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 3px 0;
+  cursor: text;
+}
+
+.checklist-editor__checkbox {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.checklist-editor__text {
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-text);
+  caret-color: var(--color-primary);
+  outline: none;
+  min-width: 0;
+}
+
+.checklist-editor__text:empty::before {
+  content: attr(data-placeholder);
+  color: var(--color-text-faint);
+  pointer-events: none;
+}
+
+.checklist-editor__text--checked {
+  color: var(--color-text-muted);
+  text-decoration: line-through;
+}

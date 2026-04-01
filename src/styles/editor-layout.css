@@ -1,0 +1,313 @@
+/* ── Editor Pane ────────────────────────────────────────────────────────── */
+.editor-pane {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--color-surface-2);
+}
+
+.editor-pane__header {
+  display: flex;
+  align-items: center;
+  padding: 14px 20px;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.editor-pane__title {
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+/* ── Documents container ────────────────────────────────────────────────── */
+.documents-container {
+  padding: 32px 32px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Document editor (page A4) ──────────────────────────────────────────── */
+.document-editor {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, .08), 0 1px 4px rgba(0, 0, 0, .04);
+  border: 1px solid var(--color-border);
+  max-width: 794px;
+  width: 100%;
+  margin: 0 auto 4px;
+}
+
+/* ── Document header ────────────────────────────────────────────────────── */
+.document-editor__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px 12px 0;
+  flex-shrink: 0;
+}
+
+.document-drag-handle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  flex-shrink: 0;
+  cursor: grab;
+  color: transparent;
+  transition: color 0.15s;
+}
+
+.document-editor:hover .document-drag-handle {
+  color: var(--color-text-faint);
+}
+
+.document-drag-handle:hover {
+  color: var(--color-text-muted) !important;
+}
+
+.document-drag-handle:active {
+  cursor: grabbing;
+}
+
+.document-editor__title {
+  flex: 1;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text);
+  caret-color: var(--color-primary);
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+}
+
+.document-editor__title:empty::before {
+  content: attr(data-placeholder);
+  color: var(--color-text-faint);
+  pointer-events: none;
+}
+
+.document-delete-btn {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  color: var(--color-text-faint);
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s, color 0.15s;
+}
+
+.document-editor:hover .document-delete-btn {
+  opacity: 1;
+}
+
+.document-delete-btn:hover {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* ── Insert document button (above each card) ───────────────────────────── */
+.insert-document-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: calc(100% - 64px);
+  max-width: 794px;
+  margin: 0px auto 4px;
+  padding: 4px 10px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--color-text-faint);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.insert-document-btn:hover {
+  color: var(--color-primary-light);
+  border-color: var(--color-primary-border);
+  background: var(--color-primary-bg);
+}
+
+.insert-document-btn svg {
+  opacity: 0.6;
+  width: 12px;
+  height: 12px;
+}
+
+/* ── Sections container (inside a document) ─────────────────────────────── */
+.sections-container {
+  padding: 0px 16px 8px;
+  display: flex;
+  flex-direction: column;
+  /* gap: 16px; */
+}
+
+/* ── Add document button ────────────────────────────────────────────────── */
+.add-document-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  max-width: 794px;
+  width: calc(100% - 64px);
+  margin: 8px auto 32px;
+  padding: 9px;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  background: transparent;
+  color: var(--color-text-faint);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+/* ── Section editor ─────────────────────────────────────────────────────── */
+.section-editor {
+  display: flex;
+  flex-direction: row;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  position: relative;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  border: solid 1px transparent;
+}
+
+.section-editor:hover {
+  border-color: var(--color-primary-hover);
+  /* box-shadow: 0 4px 16px rgba(99, 102, 241, 0.10), var(--shadow-sm); */
+}
+
+/* ── Section drag handle — top center, overlaid ─────────────────────────── */
+.section-drag-handle {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 18px;
+  border-radius: var(--radius-sm);
+  cursor: grab;
+  color: transparent;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.section-editor:hover .section-drag-handle {
+  color: var(--color-primary-icon);
+  background: var(--color-surface);
+  border-color: var(--color-primary-border-hover);
+}
+
+.section-drag-handle:hover {
+  color: var(--color-primary-light) !important;
+}
+
+.section-drag-handle:active {
+  cursor: grabbing;
+}
+
+/* ── Section controls (delete) ──────────────────────────────────────────── */
+.section-controls {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transition: var(--transition-controls);
+  pointer-events: none;
+}
+
+.section-editor:hover .section-controls {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.section-delete-btn {
+  width: 26px;
+  height: 26px;
+  color: var(--color-text-faint);
+  background: var(--color-surface);
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-sm);
+}
+
+.section-delete-btn:hover {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* ── Add section bar ────────────────────────────────────────────────────── */
+.add-section-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+}
+
+.add-section-bar__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-2);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.add-section-bar__btn:hover {
+  border-color: var(--color-primary-border-hover);
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
+  box-shadow: 0 2px 8px var(--color-primary-glow);
+}
+
+.add-document-btn:hover {
+  border-color: var(--color-primary-border);
+  color: var(--color-primary-light);
+  background: linear-gradient(135deg, var(--color-primary-bg) 0%, var(--color-primary-bg) 100%);
+}
+
+/* ── Scrollbar ──────────────────────────────────────────────────────────── */
+.editor-pane::-webkit-scrollbar {
+  width: 6px;
+}
+
+.editor-pane::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.editor-pane::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}

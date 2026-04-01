@@ -1,0 +1,105 @@
+.code-editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  border-radius: calc(var(--radius-lg) - 2px);
+  overflow: hidden;
+  background: var(--dark-bg);
+}
+
+.code-editor__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: var(--dark-surface);
+  border-bottom: 1px solid var(--dark-border);
+  min-height: 36px;
+}
+
+.code-editor__lang-select {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--dark-text);
+  background: var(--dark-bg);
+  border: 1px solid var(--dark-border);
+  border-radius: var(--radius-sm);
+  padding: 2px 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.code-editor__lang-select:focus {
+  border-color: var(--color-primary-light);
+}
+
+.code-editor__filename {
+  flex: 1;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Monaco', 'Consolas', monospace;
+  color: var(--dark-text-muted);
+  caret-color: var(--color-primary-light);
+  outline: none;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.code-editor__filename:empty::before {
+  content: attr(data-placeholder);
+  color: var(--dark-border);
+  pointer-events: none;
+}
+
+.code-editor__copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  color: var(--dark-icon);
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s, background 0.15s;
+}
+
+.section-editor:hover .code-editor__copy-btn {
+  opacity: 1;
+}
+
+.code-editor__copy-btn:hover {
+  color: var(--dark-text);
+  background: var(--dark-border);
+}
+
+.code-editor__copy-btn.is-copied {
+  color: var(--color-success);
+}
+
+.code-editor__pre {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+}
+
+.code-editor__code {
+  display: block;
+  font-family: 'Cascadia Code', 'Fira Code', 'Menlo', 'Monaco', 'Consolas', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--dark-text-bright);
+  caret-color: var(--color-primary-icon);
+  outline: none;
+  min-height: 3em;
+  white-space: pre;
+  tab-size: 2;
+}
+
+.code-editor__code:empty::before {
+  content: attr(data-placeholder);
+  color: var(--dark-border);
+  pointer-events: none;
+}

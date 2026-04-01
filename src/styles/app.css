@@ -1,0 +1,304 @@
+/* ── CSS Variables ──────────────────────────────────────────────────────── */
+:root {
+  --color-primary:       #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-danger:        #ef4444;
+  --color-border:        #e2e8f0;
+  --color-surface:       #ffffff;
+  --color-surface-2:     #f1f5f9;
+  --color-surface-3:     #e8edf5;
+  --color-text:          #1e293b;
+  --color-text-muted:    #64748b;
+  --color-text-faint:    #94a3b8;
+  --radius-sm:           3px;
+  --radius-md:           5px;
+  --radius-lg:           7px;
+  --shadow-sm:           0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+  --shadow-md:           0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.04);
+  --topbar-height:       52px;
+
+  /* Gradients */
+  --section-gradient:    linear-gradient(145deg, #f8faff 0%, #f0f4ff 100%);
+  --block-gradient:      linear-gradient(145deg, #ffffff 0%, #f8f9fe 100%);
+  --block-hover-bg:      linear-gradient(145deg, #f5f7ff 0%, #eef1ff 100%);
+
+  /* Floating control pills */
+  --pill-bg:             rgba(255, 255, 255, 0.92);
+  --pill-border:         rgba(99, 102, 241, 0.18);
+  --pill-shadow:         0 2px 8px rgba(79, 70, 229, 0.12), 0 1px 3px rgba(0,0,0,.06);
+  --pill-radius:         20px;
+  --transition-controls: opacity 0.18s ease, transform 0.18s ease;
+
+  /* Primary tints */
+  --color-primary-light:        #6366f1;
+  --color-primary-icon:         #818cf8;
+  --color-primary-border:       #c7d2fe;
+  --color-primary-border-hover: #a5b4fc;
+  --color-primary-bg:           #f5f3ff;
+  --color-primary-bg-deep:      #ede9fe;
+  --color-primary-glow:         rgba(99, 102, 241, 0.1);
+
+  /* Semantic */
+  --color-danger-bg:            #fee2e2;
+  --color-success:              #34d399;
+
+  /* Callout variants */
+  --callout-info-bg:            #eff6ff;
+  --callout-info-border:        #93c5fd;
+  --callout-info-icon:          #3b82f6;
+  --callout-info-title:         #1d4ed8;
+
+  --callout-warning-bg:         #fffbeb;
+  --callout-warning-border:     #fcd34d;
+  --callout-warning-icon:       #f59e0b;
+  --callout-warning-title:      #92400e;
+
+  --callout-danger-bg:          #fff1f2;
+  --callout-danger-border:      #fca5a5;
+  --callout-danger-icon:        #ef4444;
+  --callout-danger-title:       #991b1b;
+
+  --callout-tip-bg:             #f0fdf4;
+  --callout-tip-border:         #86efac;
+  --callout-tip-icon:           #22c55e;
+  --callout-tip-title:          #166534;
+
+  /* Dark theme (shell / code editors) */
+  --dark-bg:                    #0f172a;
+  --dark-surface:               #1e293b;
+  --dark-border:                #334155;
+  --dark-icon:                  #475569;
+  --dark-text-muted:            #64748b;
+  --dark-text:                  #94a3b8;
+  --dark-text-bright:           #e2e8f0;
+}
+
+/* ── App shell ──────────────────────────────────────────────────────────── */
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Top bar ────────────────────────────────────────────────────────────── */
+.app-topbar {
+  height: var(--topbar-height);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  gap: 12px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+
+.app-topbar__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.app-topbar__btn {
+  font-size: 13px;
+  padding: 5px 12px;
+}
+
+.app-topbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--color-primary);
+  letter-spacing: -0.3px;
+}
+
+/* ── Workspace ──────────────────────────────────────────────────────────── */
+.app-workspace {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  min-height: 0;
+}
+
+/* ── Divider ────────────────────────────────────────────────────────────── */
+.app-divider {
+  width: 1px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
+/* ── Shared buttons ─────────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+  white-space: nowrap;
+}
+
+.btn--primary {
+  background: var(--color-primary);
+  color: var(--color-surface);
+  box-shadow: 0 1px 2px rgba(79,70,229,.25);
+}
+.btn--primary:hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 2px 6px rgba(79,70,229,.3);
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  transition: background 0.12s, color 0.12s;
+  flex-shrink: 0;
+}
+.icon-btn:hover {
+  background: var(--color-surface-3);
+  color: var(--color-text);
+}
+.icon-btn.is-active {
+  background: var(--color-primary-bg-deep);
+  color: var(--color-primary);
+}
+.icon-btn.is-danger:hover {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+/* ── Block catalog overlay ──────────────────────────────────────────────── */
+.block-catalog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.block-catalog {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  width: 400px;
+  max-width: 90vw;
+  animation: slideUp 0.18s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(8px); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+
+.block-catalog__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.block-catalog__title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.block-catalog__close {
+  width: 28px;
+  height: 28px;
+}
+
+.block-catalog__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 16px;
+}
+
+.block-catalog__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 16px 8px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  transition: border-color 0.15s, background 0.15s, transform 0.1s;
+  cursor: pointer;
+}
+.block-catalog__card:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-bg);
+  transform: translateY(-1px);
+}
+
+.block-catalog__card-icon {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-bg-deep);
+  border-radius: var(--radius-md);
+}
+
+.block-catalog__card-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* ── SortableJS ─────────────────────────────────────────────────────────── */
+.sortable-ghost {
+  opacity: 0.35;
+  background: var(--color-primary-bg-deep);
+  border-radius: var(--radius-md);
+}
+.sortable-chosen {
+  box-shadow: var(--shadow-md);
+}
+
+/* ── Drag handle ────────────────────────────────────────────────────────── */
+.drag-handle {
+  cursor: grab;
+  color: var(--color-text-faint);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: var(--radius-sm);
+  transition: color 0.12s;
+  flex-shrink: 0;
+}
+.drag-handle:hover {
+  color: var(--color-text-muted);
+}
+.drag-handle:active {
+  cursor: grabbing;
+}
