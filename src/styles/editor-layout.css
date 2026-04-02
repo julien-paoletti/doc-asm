@@ -17,6 +17,11 @@
 }
 
 /* ── Document editor (page A4) ──────────────────────────────────────────── */
+@keyframes doc-enter {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
 .document-editor {
   position: relative;
   display: flex;
@@ -28,6 +33,7 @@
   max-width: 794px;
   width: 100%;
   margin: 0 auto 4px;
+  animation: doc-enter 0.2s ease both;
 }
 
 /* ── Document header ────────────────────────────────────────────────────── */
@@ -167,6 +173,11 @@
 }
 
 /* ── Section editor ─────────────────────────────────────────────────────── */
+@keyframes section-enter {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
 .section-editor {
   display: flex;
   flex-direction: row;
@@ -175,11 +186,11 @@
   position: relative;
   transition: border-color 0.2s, box-shadow 0.2s;
   border: solid 1px transparent;
+  animation: section-enter 0.18s ease both;
 }
 
 .section-editor:hover {
   border-color: var(--color-primary-hover);
-  /* box-shadow: 0 4px 16px rgba(99, 102, 241, 0.10), var(--shadow-sm); */
 }
 
 /* ── Section drag handle — top center, overlaid ─────────────────────────── */
@@ -279,6 +290,11 @@
   box-shadow: 0 2px 8px var(--color-primary-glow);
 }
 
+.add-section-bar__btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 .add-document-btn:hover {
   border-color: var(--color-primary-border);
   color: var(--color-primary-light);
@@ -297,4 +313,9 @@
 .editor-pane::-webkit-scrollbar-thumb {
   background: var(--color-border);
   border-radius: 3px;
+  transition: background 0.15s;
+}
+
+.editor-pane::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-faint);
 }
