@@ -49,7 +49,7 @@
 
 .code-editor__filename:empty::before {
   content: attr(data-placeholder);
-  color: var(--dark-border);
+  color: var(--dark-text-muted);
   pointer-events: none;
 }
 
@@ -102,6 +102,6 @@
 
 .code-editor__code:empty::before {
   content: attr(data-placeholder);
-  color: var(--dark-border);
+  color: var(--dark-text-muted);
   pointer-events: none;
 }

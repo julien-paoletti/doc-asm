@@ -102,6 +102,8 @@
 
 /* ── Insert document button (above each card) ───────────────────────────── */
 .insert-document-btn {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -143,6 +145,8 @@
 
 /* ── Add document button ────────────────────────────────────────────────── */
 .add-document-btn {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -253,6 +257,8 @@
 }
 
 .add-section-bar__btn {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;

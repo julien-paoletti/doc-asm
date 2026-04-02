@@ -3,9 +3,29 @@ import { icon } from '../utils/icons.js';
 import { store } from '../store/store.js';
 import { saveFileAs, writeHandle, openFile } from '../persistence/file-io.js';
 
+const THEMES = [
+  { id: 'default',  label: 'Blue'     },
+  { id: 'midnight', label: 'Midnight' },
+  { id: 'terminal', label: 'Terminal' },
+  { id: 'storm',    label: 'Storm'    },
+  { id: 'amber',    label: 'Amber'    },
+  { id: 'rose',     label: 'Rosé'     },
+] as const;
+
+type ThemeId = typeof THEMES[number]['id'];
+
+function applyTheme(id: ThemeId): void {
+  document.documentElement.dataset['theme'] = id === 'default' ? '' : id;
+  localStorage.setItem('docasm-theme', id);
+}
+
 export function mountApp(selector: string): void {
   const root = document.querySelector(selector);
   if (!root) throw new Error(`Element "${selector}" not found.`);
+
+  // Restore persisted theme
+  const savedTheme = (localStorage.getItem('docasm-theme') ?? 'default') as ThemeId;
+  applyTheme(savedTheme);
 
   let fileHandle: FileSystemFileHandle | null = null;
 
@@ -29,7 +49,7 @@ export function mountApp(selector: string): void {
 
   const openBtn = document.createElement('button');
   openBtn.type = 'button';
-  openBtn.className = 'btn app-topbar__btn';
+  openBtn.className = 'btn btn--secondary app-topbar__btn';
   openBtn.innerHTML = `${icon('folderOpen')} Open`;
   openBtn.addEventListener('click', async () => {
     const result = await openFile();
@@ -45,6 +65,19 @@ export function mountApp(selector: string): void {
   saveBtn.innerHTML = `${icon('deviceFloppy')} Save`;
   saveBtn.addEventListener('click', () => save());
 
+  const themeSelect = document.createElement('select');
+  themeSelect.className = 'app-topbar__theme-select';
+  themeSelect.title = 'Theme';
+  THEMES.forEach(({ id, label }) => {
+    const opt = document.createElement('option');
+    opt.value = id;
+    opt.textContent = label;
+    opt.selected = id === savedTheme;
+    themeSelect.appendChild(opt);
+  });
+  themeSelect.addEventListener('change', () => applyTheme(themeSelect.value as ThemeId));
+
+  topBarActions.appendChild(themeSelect);
   topBarActions.appendChild(openBtn);
   topBarActions.appendChild(saveBtn);
 

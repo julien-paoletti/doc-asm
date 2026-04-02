@@ -38,7 +38,7 @@
 
 .shell-editor__label:empty::before {
   content: attr(data-placeholder);
-  color: var(--dark-border);
+  color: var(--dark-text-muted);
   pointer-events: none;
 }
 
@@ -99,6 +99,6 @@
 
 .shell-editor__command:empty::before {
   content: attr(data-placeholder);
-  color: var(--dark-border);
+  color: var(--dark-text-muted);
   pointer-events: none;
 }

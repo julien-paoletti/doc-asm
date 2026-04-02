@@ -1,5 +1,6 @@
 import './styles/reset.css';
 import './styles/app.css';
+import './styles/themes.css';
 import './styles/editor-layout.css';
 import 'highlight.js/styles/atom-one-dark.css';
 
