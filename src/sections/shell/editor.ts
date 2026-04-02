@@ -33,7 +33,6 @@ export function createShellEditor(
 
   header.appendChild(termIcon);
   header.appendChild(labelInput);
-  header.appendChild(copyBtn);
 
   const prompt = document.createElement('span');
   prompt.className = 'shell-editor__prompt';
@@ -61,6 +60,7 @@ export function createShellEditor(
 
   wrapper.appendChild(header);
   wrapper.appendChild(commandRow);
+  wrapper.appendChild(copyBtn);
 
   return { el: wrapper, focusTitle: () => labelInput.focus() };
 }

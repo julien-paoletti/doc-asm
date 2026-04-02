@@ -41,7 +41,6 @@ export function createCodeEditor(
 
   header.appendChild(select);
   header.appendChild(filenameInput);
-  header.appendChild(copyBtn);
 
   // ── Code area ─────────────────────────────────────────────────────────────
   const pre = document.createElement('pre');
@@ -127,6 +126,7 @@ export function createCodeEditor(
   pre.appendChild(codeArea);
   wrapper.appendChild(header);
   wrapper.appendChild(pre);
+  wrapper.appendChild(copyBtn);
 
   if (data.code) highlight();
 

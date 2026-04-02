@@ -215,12 +215,11 @@
 /* ── Section controls (delete) ──────────────────────────────────────────── */
 .section-controls {
   position: absolute;
-  top: 8px;
+  top: 1px;
   right: 8px;
   z-index: 10;
   display: flex;
   align-items: center;
-  gap: 2px;
   opacity: 0;
   transition: var(--transition-controls);
   pointer-events: none;
@@ -232,17 +231,16 @@
 }
 
 .section-delete-btn {
-  width: 26px;
-  height: 26px;
-  color: var(--color-text-faint);
-  background: var(--color-surface);
-  border: 1px solid var(--color-primary);
-  border-radius: var(--radius-sm);
+  width: 20px;
+  height: 20px;
+  color: var(--color-danger);
 }
 
 .section-delete-btn:hover {
   background: var(--color-danger-bg);
   color: var(--color-danger);
+  border: 0px solid red;
+  border-radius: 5px;
 }
 
 /* ── Add section bar ────────────────────────────────────────────────────── */
