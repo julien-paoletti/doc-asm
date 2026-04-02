@@ -27,7 +27,7 @@ export function createCodeEditor(
   const filenameInput = document.createElement('div');
   filenameInput.contentEditable = 'true';
   filenameInput.className = 'code-editor__filename';
-  filenameInput.setAttribute('data-placeholder', 'Nom du fichier…');
+  filenameInput.setAttribute('data-placeholder', 'Filename…');
   filenameInput.textContent = data.filename;
   filenameInput.addEventListener('input', () => onChange({ filename: filenameInput.textContent ?? '' }));
   filenameInput.addEventListener('paste', onPasteText);
@@ -52,7 +52,7 @@ export function createCodeEditor(
   codeArea.setAttribute('spellcheck', 'false');
   codeArea.setAttribute('autocorrect', 'off');
   codeArea.setAttribute('autocapitalize', 'off');
-  codeArea.setAttribute('data-placeholder', 'Saisissez votre code…');
+  codeArea.setAttribute('data-placeholder', 'Type your code…');
   // Plain text avoids HTML injection from stored data
   codeArea.textContent = data.code;
 

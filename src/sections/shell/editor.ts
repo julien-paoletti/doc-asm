@@ -42,7 +42,7 @@ export function createShellEditor(
   const commandArea = document.createElement('div');
   commandArea.contentEditable = 'true';
   commandArea.className = 'shell-editor__command';
-  commandArea.setAttribute('data-placeholder', 'commande…');
+  commandArea.setAttribute('data-placeholder', 'command…');
   commandArea.setAttribute('spellcheck', 'false');
   commandArea.setAttribute('autocorrect', 'off');
   commandArea.innerHTML = data.command;
