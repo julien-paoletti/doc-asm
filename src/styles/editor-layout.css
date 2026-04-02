@@ -8,23 +8,6 @@
   background: var(--color-surface-2);
 }
 
-.editor-pane__header {
-  display: flex;
-  align-items: center;
-  padding: 14px 20px;
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
-  flex-shrink: 0;
-}
-
-.editor-pane__title {
-  font-size: 13px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--color-text-muted);
-}
-
 /* ── Documents container ────────────────────────────────────────────────── */
 .documents-container {
   padding: 32px 32px 8px;

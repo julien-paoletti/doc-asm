@@ -14,13 +14,6 @@ export class EditorPane {
     this.el = document.createElement('div');
     this.el.className = 'editor-pane';
 
-    const header = document.createElement('div');
-    header.className = 'editor-pane__header';
-    const title = document.createElement('h2');
-    title.className = 'editor-pane__title';
-    title.textContent = 'Editor';
-    header.appendChild(title);
-
     this.documentsContainer = document.createElement('div');
     this.documentsContainer.className = 'documents-container';
 
@@ -44,7 +37,6 @@ export class EditorPane {
 
     this.unsubscribe = store.subscribe((scope, state) => this.onStoreChange(scope, state));
 
-    this.el.appendChild(header);
     this.el.appendChild(this.documentsContainer);
     this.el.appendChild(addDocBtn);
   }
