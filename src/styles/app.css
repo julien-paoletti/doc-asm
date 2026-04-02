@@ -102,6 +102,12 @@
   gap: 8px;
 }
 
+.app-topbar__filename {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  margin-left: 4px;
+}
+
 .app-topbar__btn {
   font-size: 13px;
   padding: 5px 12px;

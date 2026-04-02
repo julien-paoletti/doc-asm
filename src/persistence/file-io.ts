@@ -1,44 +1,51 @@
 import { serialize, parse, FILE_EXTENSION, FILE_MIME } from './file-format.js';
 import type { AppState } from '../types.js';
 
-export function saveFile(state: AppState, filename: string): void {
-  const json = serialize(state);
-  const blob = new Blob([json], { type: FILE_MIME });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = filename.endsWith(FILE_EXTENSION) ? filename : filename + FILE_EXTENSION;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  // Defer revoke to let the browser start the download before the URL is invalidated
-  setTimeout(() => URL.revokeObjectURL(url), 10000);
+const PICKER_OPTS: FilePickerOptions = {
+  types: [{
+    description: 'Doc-Asm file',
+    accept: { [FILE_MIME]: [FILE_EXTENSION as `.${string}`] },
+  }],
+  excludeAcceptAllOption: true,
+};
+
+export async function saveFileAs(state: AppState): Promise<FileSystemFileHandle | null> {
+  let handle: FileSystemFileHandle;
+  try {
+    handle = await window.showSaveFilePicker({
+      ...PICKER_OPTS,
+      suggestedName: 'untitled' + FILE_EXTENSION,
+    });
+  } catch (e) {
+    if ((e as DOMException).name !== 'AbortError') throw e;
+    return null;
+  }
+  await writeHandle(handle, state);
+  return handle;
 }
 
-export function openFile(): Promise<{ state: AppState; filename: string } | null> {
-  return new Promise((resolve) => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = FILE_EXTENSION + ',' + FILE_MIME;
+export async function openFile(): Promise<{ state: AppState; handle: FileSystemFileHandle } | null> {
+  let handles: FileSystemFileHandle[];
+  try {
+    handles = await window.showOpenFilePicker({ ...PICKER_OPTS, multiple: false });
+  } catch (e) {
+    if ((e as DOMException).name !== 'AbortError') throw e;
+    return null;
+  }
 
-    input.addEventListener('change', () => {
-      const file = input.files?.[0];
-      if (!file) { resolve(null); return; }
+  const handle = handles[0]!;
+  const file = await handle.getFile();
+  const raw = await file.text();
+  const result = parse(raw);
+  if (!result.ok) {
+    alert(`Failed to open file: ${result.error}`);
+    return null;
+  }
+  return { state: result.state, handle };
+}
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        const result = parse(reader.result as string);
-        if (!result.ok) {
-          alert(`Failed to open file: ${result.error}`);
-          resolve(null);
-          return;
-        }
-        resolve({ state: result.state, filename: file.name });
-      };
-      reader.readAsText(file);
-    });
-
-    input.addEventListener('cancel', () => resolve(null));
-    input.click();
-  });
+export async function writeHandle(handle: FileSystemFileHandle, state: AppState): Promise<void> {
+  const writable = await handle.createWritable();
+  await writable.write(serialize(state));
+  await writable.close();
 }

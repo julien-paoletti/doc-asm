@@ -1,13 +1,13 @@
 import { EditorPane } from './editor-pane.js';
 import { icon } from '../utils/icons.js';
 import { store } from '../store/store.js';
-import { saveFile, openFile } from '../persistence/file-io.js';
-
-let currentFilename = 'untitled.docasm';
+import { saveFileAs, writeHandle, openFile } from '../persistence/file-io.js';
 
 export function mountApp(selector: string): void {
   const root = document.querySelector(selector);
   if (!root) throw new Error(`Element "${selector}" not found.`);
+
+  let fileHandle: FileSystemFileHandle | null = null;
 
   const app = document.createElement('div');
   app.className = 'app';
@@ -20,6 +20,10 @@ export function mountApp(selector: string): void {
   logo.className = 'app-topbar__logo';
   logo.innerHTML = `${icon('notebook')} Doc-Asm`;
 
+  const filenameEl = document.createElement('span');
+  filenameEl.className = 'app-topbar__filename';
+  filenameEl.textContent = 'untitled';
+
   const topBarActions = document.createElement('div');
   topBarActions.className = 'app-topbar__actions';
 
@@ -30,7 +34,8 @@ export function mountApp(selector: string): void {
   openBtn.addEventListener('click', async () => {
     const result = await openFile();
     if (!result) return;
-    currentFilename = result.filename;
+    fileHandle = result.handle;
+    filenameEl.textContent = fileHandle.name;
     store.loadState(result.state);
   });
 
@@ -38,24 +43,25 @@ export function mountApp(selector: string): void {
   saveBtn.type = 'button';
   saveBtn.className = 'btn btn--primary app-topbar__btn';
   saveBtn.innerHTML = `${icon('deviceFloppy')} Save`;
-  saveBtn.addEventListener('click', () => {
-    saveFile(store.getSnapshot(), currentFilename);
-  });
+  saveBtn.addEventListener('click', () => save());
 
   topBarActions.appendChild(openBtn);
   topBarActions.appendChild(saveBtn);
 
   topBar.appendChild(logo);
+  topBar.appendChild(filenameEl);
   topBar.appendChild(topBarActions);
   app.appendChild(topBar);
 
   // ── Ctrl+S shortcut ──────────────────────────────────────────────────────
-  document.addEventListener('keydown', (e) => {
+  // Registered once per mountApp call; removed if the app element is replaced.
+  const onKeyDown = (e: KeyboardEvent): void => {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
       e.preventDefault();
-      saveFile(store.getSnapshot(), currentFilename);
+      save();
     }
-  });
+  };
+  document.addEventListener('keydown', onKeyDown);
 
   // ── Main workspace ───────────────────────────────────────────────────────
   const workspace = document.createElement('div');
@@ -66,4 +72,15 @@ export function mountApp(selector: string): void {
   app.appendChild(workspace);
 
   root.appendChild(app);
+
+  async function save(): Promise<void> {
+    if (fileHandle) {
+      await writeHandle(fileHandle, store.getSnapshot());
+    } else {
+      const handle = await saveFileAs(store.getSnapshot());
+      if (!handle) return;
+      fileHandle = handle;
+      filenameEl.textContent = fileHandle.name;
+    }
+  }
 }
