@@ -3,7 +3,7 @@ import type { SectionPlugin } from '../../types.js';
 import { icon } from '../../utils/icons.js';
 
 export type SeparatorStyle = 'line' | 'blank';
-export type SeparatorSize  = 'sm' | 'md' | 'lg';
+export type SeparatorSize = 'sm' | 'md' | 'lg';
 
 export interface SeparatorData extends Record<string, unknown> {
   style: SeparatorStyle;
@@ -11,8 +11,8 @@ export interface SeparatorData extends Record<string, unknown> {
 }
 
 const STYLES: { id: SeparatorStyle; label: string }[] = [
-  { id: 'line',  label: '— Line'  },
-  { id: 'blank', label: '␣ Space' },
+  { id: 'line', label: 'Line' },
+  { id: 'blank', label: 'Space' },
 ];
 
 const SIZES: { id: SeparatorSize; label: string }[] = [
@@ -61,7 +61,7 @@ export const SeparatorPlugin: SectionPlugin<SeparatorData> = {
     controls.className = 'separator-editor__controls';
 
     const styleBtns = makeToggleGroup(STYLES, data.style, 'separator-editor--', wrapper, (id) => onChange({ style: id }));
-    const sizeBtns  = makeToggleGroup(SIZES,  data.size,  'separator-editor--', wrapper, (id) => onChange({ size: id }));
+    const sizeBtns = makeToggleGroup(SIZES, data.size, 'separator-editor--', wrapper, (id) => onChange({ size: id }));
 
     const divider = document.createElement('span');
     divider.className = 'separator-editor__divider';

@@ -5,13 +5,14 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 6px 16px;
-  min-height: 32px;
+  padding: 0px 16px;
+  min-height: 22px;
 }
 
 /* Style toggle — shown only on hover/focus */
 .separator-editor__controls {
+  position: absolute;
+  left: 16px;
   display: flex;
   gap: 4px;
   opacity: 0;
@@ -25,15 +26,15 @@
 
 .separator-editor__divider {
   width: 1px;
-  height: 14px;
+  height: 10px;
   background: var(--color-border);
   flex-shrink: 0;
 }
 
 .separator-editor__btn {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  padding: 2px 10px;
+  padding: 1px 6px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--color-border);
   background: var(--color-surface-2);
@@ -68,6 +69,14 @@
 }
 
 /* Spacing variants */
-.separator-editor--sm  { padding: 4px 16px; }
-.separator-editor--md  { padding: 12px 16px; }
-.separator-editor--lg  { padding: 24px 16px; }
+.separator-editor--sm {
+  padding: 10px 16px;
+}
+
+.separator-editor--md {
+  padding: 18px 16px;
+}
+
+.separator-editor--lg {
+  padding: 26px 16px;
+}
