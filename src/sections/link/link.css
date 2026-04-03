@@ -10,7 +10,6 @@
 .link-editor__row {
   display: flex;
   align-items: center;
-  gap: 0;
   padding: 3px 6px;
   border-radius: var(--radius-md);
   border: 1px solid var(--color-border);

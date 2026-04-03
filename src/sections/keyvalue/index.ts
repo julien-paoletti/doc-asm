@@ -3,6 +3,8 @@ import type { SectionPlugin } from '../../types.js';
 import { icon } from '../../utils/icons.js';
 import { onPasteText } from '../../utils/clipboard.js';
 import { generateId } from '../../utils/id.js';
+import { makeSortable } from '../../dnd/sortable.js';
+import { moveArrayItem } from '../../utils/array.js';
 
 export interface KVPair {
   id: string;
@@ -123,13 +125,39 @@ export const KeyValuePlugin: SectionPlugin<KeyValueData> = {
           }
         });
 
+        const dragHandle = document.createElement('div');
+        dragHandle.className = 'drag-handle kv-editor__drag-handle';
+        dragHandle.setAttribute('aria-label', 'Drag to reorder');
+        dragHandle.innerHTML = icon('gripVertical');
+
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'kv-editor__delete-btn';
+        deleteBtn.title = 'Delete row';
+        deleteBtn.innerHTML = icon('x');
+        deleteBtn.addEventListener('mousedown', (e) => { e.preventDefault(); removeRow(); });
+
+        const controls = document.createElement('div');
+        controls.className = 'kv-editor__row-controls';
+        controls.appendChild(dragHandle);
+        controls.appendChild(deleteBtn);
+
         row.appendChild(keyEl);
         row.appendChild(valueEl);
+        row.appendChild(controls);
         wrapper.appendChild(row);
       });
     }
 
     renderRows();
+
+    makeSortable({
+      container: wrapper,
+      onEnd(from, to) {
+        pairs = moveArrayItem(pairs, from, to);
+        save();
+      },
+    });
 
     return {
       el: wrapper,

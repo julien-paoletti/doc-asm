@@ -64,21 +64,15 @@ export const LinkPlugin: SectionPlugin<LinkData> = {
         urlEl.setAttribute('data-placeholder', 'https://…');
         urlEl.setAttribute('spellcheck', 'false');
         urlEl.textContent = item.url;
-        urlEl.addEventListener('input', () => { items[idx]!.url = urlEl.textContent ?? ''; save(); });
+        urlEl.addEventListener('input', () => {
+          items[idx]!.url = urlEl.textContent ?? '';
+          openBtn.href = items[idx]!.url || '#';
+          save();
+        });
         urlEl.addEventListener('paste', onPasteText);
         urlEl.addEventListener('keydown', (e) => {
           if (e.key === 'Enter') { e.preventDefault(); addRowAfter(); }
-          else if (e.key === 'Tab' && !e.shiftKey) {
-            e.preventDefault();
-            if (idx === items.length - 1) {
-              items.push({ id: generateId(), url: '' });
-              save();
-              renderRows();
-              focusRow(idx + 1);
-            } else {
-              focusRow(idx + 1);
-            }
-          }
+          else if (e.key === 'Tab' && !e.shiftKey) { e.preventDefault(); addRowAfter(); }
           else if (e.key === 'Backspace' && urlEl.textContent === '') { e.preventDefault(); removeRow(); }
         });
 
@@ -86,11 +80,9 @@ export const LinkPlugin: SectionPlugin<LinkData> = {
         openBtn.className = 'link-editor__open-btn';
         openBtn.title = 'Open link';
         openBtn.innerHTML = `${icon('link')} Open`;
+        openBtn.href = item.url || '#';
         openBtn.target = '_blank';
         openBtn.rel = 'noopener noreferrer';
-        openBtn.addEventListener('mousedown', () => {
-          openBtn.href = items[idx]!.url || '#';
-        });
 
         const copyBtn = makeCopyButton(() => items[idx]!.url);
         copyBtn.className = 'link-editor__copy-btn';
