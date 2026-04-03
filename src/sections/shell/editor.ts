@@ -29,7 +29,7 @@ export function createShellEditor(
 
   const copyBtn = makeCopyButton(() => commandArea.textContent ?? '');
   copyBtn.className = 'shell-editor__copy-btn';
-  copyBtn.title = 'Copier la commande';
+  copyBtn.title = 'Copy command';
 
   header.appendChild(termIcon);
   header.appendChild(labelInput);

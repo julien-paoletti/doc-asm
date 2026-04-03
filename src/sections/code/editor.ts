@@ -15,7 +15,7 @@ export function createCodeEditor(
 
   const select = document.createElement('select');
   select.className = 'code-editor__lang-select';
-  select.title = 'Langage';
+  select.title = 'Language';
   LANGUAGES.forEach(({ id, label }) => {
     const opt = document.createElement('option');
     opt.value = id;
@@ -37,7 +37,7 @@ export function createCodeEditor(
 
   const copyBtn = makeCopyButton(() => codeArea.textContent ?? '');
   copyBtn.className = 'code-editor__copy-btn';
-  copyBtn.title = 'Copier le code';
+  copyBtn.title = 'Copy code';
 
   header.appendChild(select);
   header.appendChild(filenameInput);
