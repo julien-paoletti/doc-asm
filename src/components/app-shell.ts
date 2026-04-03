@@ -2,6 +2,7 @@ import { EditorPane } from './editor-pane.js';
 import { icon } from '../utils/icons.js';
 import { store } from '../store/store.js';
 import { saveFileAs, writeHandle, openFile } from '../persistence/file-io.js';
+import { showToast } from './toast.js';
 
 const THEMES = [
   { id: 'default',  label: 'Blue'     },
@@ -107,13 +108,18 @@ export function mountApp(selector: string): void {
   root.appendChild(app);
 
   async function save(): Promise<void> {
-    if (fileHandle) {
-      await writeHandle(fileHandle, store.getSnapshot());
-    } else {
-      const handle = await saveFileAs(store.getSnapshot());
-      if (!handle) return;
-      fileHandle = handle;
-      filenameEl.textContent = fileHandle.name;
+    try {
+      if (fileHandle) {
+        await writeHandle(fileHandle, store.getSnapshot());
+      } else {
+        const handle = await saveFileAs(store.getSnapshot());
+        if (!handle) return;
+        fileHandle = handle;
+        filenameEl.textContent = fileHandle.name;
+      }
+      showToast({ message: `Saved — ${fileHandle!.name}`, variant: 'success' });
+    } catch {
+      showToast({ message: 'Failed to save file.', variant: 'error' });
     }
   }
 }

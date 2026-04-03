@@ -2,6 +2,7 @@ import './styles/reset.css';
 import './styles/app.css';
 import './styles/themes.css';
 import './styles/editor-layout.css';
+import './components/toast.css';
 import 'highlight.js/styles/atom-one-dark.css';
 
 import { registerPlugin } from './sections/registry.js';
