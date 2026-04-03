@@ -15,6 +15,7 @@ import { KeyValuePlugin } from './sections/keyvalue/index.js';
 import { CalloutPlugin } from './sections/callout/index.js';
 import { SeparatorPlugin } from './sections/separator/index.js';
 import { LinkPlugin } from './sections/link/index.js';
+import { ImagePlugin } from './sections/image/index.js';
 import { mountApp } from './components/app-shell.js';
 
 registerPlugin(HeadingPlugin);
@@ -26,5 +27,6 @@ registerPlugin(KeyValuePlugin);
 registerPlugin(CalloutPlugin);
 registerPlugin(SeparatorPlugin);
 registerPlugin(LinkPlugin);
+registerPlugin(ImagePlugin);
 
 mountApp('#app');

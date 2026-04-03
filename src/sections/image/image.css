@@ -1,0 +1,98 @@
+.image-editor {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Drop zone (empty state) ─────────────────────────────────────────────── */
+.image-editor__dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: center;
+}
+
+.image-editor__dropzone:hover,
+.image-editor__dropzone.is-over {
+  border-color: var(--color-primary-border-hover);
+  background: var(--color-primary-bg);
+}
+
+.image-editor__dropzone svg {
+  width: 32px;
+  height: 32px;
+  color: var(--color-text-faint);
+  transition: color 0.15s;
+}
+
+.image-editor__dropzone:hover svg,
+.image-editor__dropzone.is-over svg {
+  color: var(--color-primary);
+}
+
+.image-editor__dropzone-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.image-editor__dropzone-hint {
+  font-size: 11px;
+  color: var(--color-text-faint);
+}
+
+/* ── Image display ───────────────────────────────────────────────────────── */
+.image-editor__preview {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-editor__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+
+.image-editor__replace-btn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.15s, background 0.15s;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.image-editor__replace-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.image-editor__preview:hover .image-editor__replace-btn {
+  opacity: 1;
+}
+
+.image-editor__replace-btn:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
