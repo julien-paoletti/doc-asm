@@ -95,6 +95,34 @@ export class DocumentEditor {
     this.el.appendChild(this.addSectionBar.el);
   }
 
+  reconcile(doc: AppDocument): void {
+    if (this.titleEl.textContent !== doc.title) this.titleEl.textContent = doc.title;
+    const s = doc.status ?? 'draft';
+    if (this.statusBadge.dataset['status'] !== s) this.updateStatusBadge(doc.status);
+
+    const incoming = new Set(doc.sections.map((s) => s.id));
+    for (const [id, editor] of this.sectionEditorMap) {
+      if (!incoming.has(id)) {
+        editor.destroy();
+        this.sectionEditorMap.delete(id);
+      }
+    }
+
+    for (const section of doc.sections) {
+      const existing = this.sectionEditorMap.get(section.id);
+      if (existing) {
+        existing.update(section.data);
+      } else {
+        this.sectionEditorMap.set(section.id, new SectionEditor(doc.id, section));
+      }
+    }
+
+    for (const section of doc.sections) {
+      const editor = this.sectionEditorMap.get(section.id);
+      if (editor) this.sectionsContainer.appendChild(editor.el);
+    }
+  }
+
   handleStoreChange(scope: ChangeScope, state: Readonly<AppState>, documentId: string): void {
     if (!('documentId' in scope) || scope.documentId !== documentId) return;
 

@@ -76,6 +76,15 @@ export const SeparatorPlugin: SectionPlugin<SeparatorData> = {
     wrapper.appendChild(controls);
     wrapper.appendChild(line);
 
-    return { el: wrapper };
+    return {
+      el: wrapper,
+      update(d) {
+        STYLES.forEach(({ id }) => wrapper.classList.remove(`separator-editor--${id}`));
+        SIZES.forEach(({ id }) => wrapper.classList.remove(`separator-editor--${id}`));
+        wrapper.classList.add(`separator-editor--${d.style}`, `separator-editor--${d.size}`);
+        styleBtns.forEach((b, i) => b.classList.toggle('is-active', STYLES[i]?.id === d.style));
+        sizeBtns.forEach((b, i) => b.classList.toggle('is-active', SIZES[i]?.id === d.size));
+      },
+    };
   },
 };

@@ -1,4 +1,4 @@
-import type { ChangeScope, AppState } from '../types.js';
+import type { ChangeScope, AppState, AppDocument } from '../types.js';
 import { store } from '../store/store.js';
 import { DocumentEditor } from './document-editor.js';
 import { makeSortable } from '../dnd/sortable.js';
@@ -41,35 +41,63 @@ export class EditorPane {
     this.el.appendChild(addDocBtn);
   }
 
+  private createDocumentEditor(doc: AppDocument): DocumentEditor {
+    return new DocumentEditor(doc, () => {
+      const currentIdx = store.getSnapshot().documents.findIndex((d) => d.id === doc.id);
+      store.addDocument(currentIdx - 1);
+    });
+  }
+
   private rebuild(state: AppState): void {
     this.documentEditorMap.forEach((e) => e.destroy());
     this.documentEditorMap.clear();
     this.documentsContainer.innerHTML = '';
     state.documents.forEach((doc) => {
-      const editor = new DocumentEditor(doc, () => {
-        const currentIdx = store.getSnapshot().documents.findIndex((d) => d.id === doc.id);
-        store.addDocument(currentIdx - 1);
-      });
+      const editor = this.createDocumentEditor(doc);
       this.documentEditorMap.set(doc.id, editor);
       this.documentsContainer.appendChild(editor.insertEl);
       this.documentsContainer.appendChild(editor.el);
     });
   }
 
+  private reconcile(state: AppState): void {
+    const incoming = new Set(state.documents.map((d) => d.id));
+    for (const [id, editor] of this.documentEditorMap) {
+      if (!incoming.has(id)) {
+        editor.destroy();
+        this.documentEditorMap.delete(id);
+      }
+    }
+
+    for (const doc of state.documents) {
+      const existing = this.documentEditorMap.get(doc.id);
+      if (existing) {
+        existing.reconcile(doc);
+      } else {
+        this.documentEditorMap.set(doc.id, this.createDocumentEditor(doc));
+      }
+    }
+
+    for (const doc of state.documents) {
+      const editor = this.documentEditorMap.get(doc.id);
+      if (editor) {
+        this.documentsContainer.appendChild(editor.insertEl);
+        this.documentsContainer.appendChild(editor.el);
+      }
+    }
+  }
+
   private onStoreChange(scope: ChangeScope, state: AppState): void {
     switch (scope.kind) {
       case 'state-reset':
-        this.rebuild(state);
+        this.reconcile(state);
         return;
       case 'document-add': {
         const doc = state.documents.find((d) => d.id === scope.documentId);
         if (!doc) return;
 
         const idx = state.documents.indexOf(doc);
-        const editor = new DocumentEditor(doc, () => {
-          const currentIdx = store.getSnapshot().documents.findIndex((d) => d.id === doc.id);
-          store.addDocument(currentIdx - 1);
-        });
+        const editor = this.createDocumentEditor(doc);
         this.documentEditorMap.set(doc.id, editor);
 
         const nextDoc = state.documents[idx + 1];

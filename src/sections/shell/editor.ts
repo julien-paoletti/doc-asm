@@ -5,7 +5,7 @@ import { onPasteText, makeCopyButton } from '../../utils/clipboard.js';
 export function createShellEditor(
   data: ShellData,
   onChange: (patch: Partial<ShellData>) => void
-): { el: HTMLElement; focusTitle(): void } {
+): { el: HTMLElement; focusTitle(): void; update(data: ShellData): void } {
   const wrapper = document.createElement('div');
   wrapper.className = 'shell-editor';
 
@@ -62,5 +62,12 @@ export function createShellEditor(
   wrapper.appendChild(commandRow);
   wrapper.appendChild(copyBtn);
 
-  return { el: wrapper, focusTitle: () => labelInput.focus() };
+  return {
+    el: wrapper,
+    focusTitle: () => labelInput.focus(),
+    update(d) {
+      if (labelInput.innerHTML !== d.label) labelInput.innerHTML = d.label;
+      if (commandArea.innerHTML !== d.command) commandArea.innerHTML = d.command;
+    },
+  };
 }

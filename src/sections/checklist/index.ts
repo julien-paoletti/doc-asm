@@ -141,6 +141,11 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
       focusTitle() {
         wrapper.querySelector<HTMLElement>('.checklist-editor__text')?.focus();
       },
+      update(d) {
+        items = d.items.length ? d.items.map((i) => ({ ...i })) : [{ id: generateId(), text: '', checked: false, level: 0 }];
+        renderItems();
+        updateCounter();
+      },
     };
   },
 };

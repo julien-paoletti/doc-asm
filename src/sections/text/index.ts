@@ -53,6 +53,10 @@ export const TextPlugin: SectionPlugin<TextData> = {
     wrapper.appendChild(toolbar);
     wrapper.appendChild(area);
 
-    return { el: wrapper, focusTitle: () => area.focus() };
+    return {
+      el: wrapper,
+      focusTitle: () => area.focus(),
+      update(d) { if (area.innerHTML !== d.content) area.innerHTML = d.content; },
+    };
   },
 };

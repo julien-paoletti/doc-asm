@@ -102,6 +102,10 @@ export const LinkPlugin: SectionPlugin<LinkData> = {
       focusTitle() {
         wrapper.querySelector<HTMLElement>('.link-editor__url')?.focus();
       },
+      update(d) {
+        items = d.items.length ? d.items.map((i) => ({ ...i })) : [{ id: generateId(), url: '' }];
+        renderRows();
+      },
     };
   },
 };

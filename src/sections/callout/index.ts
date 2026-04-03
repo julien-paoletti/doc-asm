@@ -44,16 +44,17 @@ export const CalloutPlugin: SectionPlugin<CalloutData> = {
         picker.querySelectorAll('.callout-editor__variant-btn').forEach((b) => b.classList.remove('is-active'));
         btn.classList.add('is-active');
         iconEl.innerHTML = icon(iconName);
+        activeVariant = VARIANTS.find((v) => v.id === id)!;
         onChange({ variant: id });
       });
       picker.appendChild(btn);
     });
 
-    const currentVariant = VARIANTS.find((v) => v.id === data.variant)!;
+    let activeVariant = VARIANTS.find((v) => v.id === data.variant)!;
 
     const iconEl = document.createElement('div');
     iconEl.className = 'callout-editor__icon';
-    iconEl.innerHTML = icon(currentVariant.iconName);
+    iconEl.innerHTML = icon(activeVariant.iconName);
 
     const content = document.createElement('div');
     content.className = 'callout-editor__content';
@@ -88,6 +89,22 @@ export const CalloutPlugin: SectionPlugin<CalloutData> = {
     wrapper.appendChild(picker);
     wrapper.appendChild(main);
 
-    return { el: wrapper, focusTitle: () => titleEl.focus() };
+    return {
+      el: wrapper,
+      focusTitle: () => titleEl.focus(),
+      update(d) {
+        if (titleEl.textContent !== d.title) titleEl.textContent = d.title;
+        if (bodyEl.innerHTML !== d.body) bodyEl.innerHTML = d.body;
+        if (d.variant !== activeVariant.id) {
+          activeVariant = VARIANTS.find((x) => x.id === d.variant)!;
+          VARIANTS.forEach((x) => wrapper.classList.remove(`callout-editor--${x.id}`));
+          wrapper.classList.add(`callout-editor--${d.variant}`);
+          iconEl.innerHTML = icon(activeVariant.iconName);
+          picker.querySelectorAll('.callout-editor__variant-btn').forEach((b, i) => {
+            b.classList.toggle('is-active', VARIANTS[i]?.id === d.variant);
+          });
+        }
+      },
+    };
   },
 };

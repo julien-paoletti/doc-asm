@@ -24,7 +24,7 @@ export interface SectionPlugin<TData extends Record<string, unknown> = Record<st
   label: string;
   icon: string;
   defaultData: TData;
-  createEditor(data: TData, onChange: (patch: Partial<TData>) => void): { el: HTMLElement; focusTitle?(): void };
+  createEditor(data: TData, onChange: (patch: Partial<TData>) => void): { el: HTMLElement; focusTitle?(): void; update?(data: TData): void };
 }
 
 export type ChangeScope =

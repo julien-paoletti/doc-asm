@@ -98,6 +98,19 @@ export function mountApp(selector: string): void {
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
       e.preventDefault();
       save();
+      return;
+    }
+    if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+      e.preventDefault();
+      store.undo();
+      return;
+    }
+    if (
+      ((e.ctrlKey || e.metaKey) && e.key === 'y') ||
+      ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'z')
+    ) {
+      e.preventDefault();
+      store.redo();
     }
   };
   document.addEventListener('keydown', onKeyDown);

@@ -48,6 +48,16 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
     wrapper.appendChild(levels);
     wrapper.appendChild(input);
 
-    return { el: wrapper, focusTitle: () => input.focus() };
+    return {
+      el: wrapper,
+      focusTitle: () => input.focus(),
+      update(d) {
+        if (input.innerHTML !== d.text) input.innerHTML = d.text;
+        if (input.className !== `heading-editor__input heading-editor__input--${d.level}`) {
+          input.className = `heading-editor__input heading-editor__input--${d.level}`;
+          levelBtns.forEach((b) => b.classList.toggle('is-active', b.textContent?.toLowerCase() === d.level));
+        }
+      },
+    };
   },
 };

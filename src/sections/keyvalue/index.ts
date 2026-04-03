@@ -164,6 +164,10 @@ export const KeyValuePlugin: SectionPlugin<KeyValueData> = {
       focusTitle() {
         wrapper.querySelector<HTMLElement>('.kv-editor__key')?.focus();
       },
+      update(d) {
+        pairs = d.pairs.length ? d.pairs.map((p) => ({ ...p })) : [{ id: generateId(), key: '', value: '' }];
+        renderRows();
+      },
     };
   },
 };

@@ -5,7 +5,7 @@ import { hljs, LANGUAGES } from './languages.js';
 export function createCodeEditor(
   data: CodeData,
   onChange: (patch: Partial<CodeData>) => void
-): { el: HTMLElement; focusTitle(): void } {
+): { el: HTMLElement; focusTitle(): void; update(data: CodeData): void } {
   const wrapper = document.createElement('div');
   wrapper.className = 'code-editor';
 
@@ -130,5 +130,19 @@ export function createCodeEditor(
 
   if (data.code) highlight();
 
-  return { el: wrapper, focusTitle: () => filenameInput.focus() };
+  return {
+    el: wrapper,
+    focusTitle: () => filenameInput.focus(),
+    update(d) {
+      if (filenameInput.textContent !== d.filename) filenameInput.textContent = d.filename;
+      if (select.value !== d.language) {
+        select.value = d.language;
+        codeArea.className = `code-editor__code language-${d.language}`;
+      }
+      if (codeArea.textContent !== d.code) {
+        codeArea.textContent = d.code;
+        highlight();
+      }
+    },
+  };
 }

@@ -99,6 +99,11 @@ export const ImagePlugin: SectionPlugin<ImageData> = {
 
     render();
 
-    return { el: wrapper };
+    return {
+      el: wrapper,
+      update(d) {
+        if (d.src !== currentSrc) { currentSrc = d.src; render(); }
+      },
+    };
   },
 };

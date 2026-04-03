@@ -6,6 +6,7 @@ import { icon } from '../utils/icons.js';
 export class SectionEditor {
   readonly el: HTMLElement;
   private focusTitle?: () => void;
+  private updateFn?: (data: Record<string, unknown>) => void;
 
   constructor(documentId: string, section: Section) {
     this.el = document.createElement('div');
@@ -29,10 +30,11 @@ export class SectionEditor {
     controls.appendChild(deleteBtn);
 
     const plugin = getPlugin(section.type);
-    const { el: contentEl, focusTitle } = plugin.createEditor(section.data as never, (patch) => {
+    const { el: contentEl, focusTitle, update } = plugin.createEditor(section.data as never, (patch) => {
       store.updateSectionData(documentId, section.id, patch as Record<string, unknown>);
     });
     this.focusTitle = focusTitle;
+    this.updateFn = update as ((data: Record<string, unknown>) => void) | undefined;
 
     this.el.appendChild(dragHandle);
     this.el.appendChild(contentEl);
@@ -41,6 +43,10 @@ export class SectionEditor {
 
   focus(): void {
     this.focusTitle?.();
+  }
+
+  update(data: Record<string, unknown>): void {
+    this.updateFn?.(data);
   }
 
   destroy(): void {
