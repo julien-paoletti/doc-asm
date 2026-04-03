@@ -14,6 +14,7 @@ import { ChecklistPlugin } from './sections/checklist/index.js';
 import { KeyValuePlugin } from './sections/keyvalue/index.js';
 import { CalloutPlugin } from './sections/callout/index.js';
 import { SeparatorPlugin } from './sections/separator/index.js';
+import { LinkPlugin } from './sections/link/index.js';
 import { mountApp } from './components/app-shell.js';
 
 registerPlugin(HeadingPlugin);
@@ -24,5 +25,6 @@ registerPlugin(ChecklistPlugin);
 registerPlugin(KeyValuePlugin);
 registerPlugin(CalloutPlugin);
 registerPlugin(SeparatorPlugin);
+registerPlugin(LinkPlugin);
 
 mountApp('#app');
