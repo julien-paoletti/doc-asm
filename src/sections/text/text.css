@@ -60,3 +60,8 @@
   color: var(--color-text-faint);
   pointer-events: none;
 }
+
+.text-editor__area ul,
+.text-editor__area ol {
+  padding-left: 1.5em;
+}
