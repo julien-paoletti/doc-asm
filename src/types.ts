@@ -6,10 +6,13 @@ export interface Section {
   data: Record<string, unknown>;
 }
 
+export type DocumentStatus = 'draft' | 'review' | 'done';
+
 export interface AppDocument {
   id: ID;
   title: string;
   sections: Section[];
+  status?: DocumentStatus;
 }
 
 export interface AppState {
@@ -33,4 +36,5 @@ export type ChangeScope =
   | { kind: 'document-remove'; documentId: ID }
   | { kind: 'document-order' }
   | { kind: 'document-title';  documentId: ID }
+  | { kind: 'document-status'; documentId: ID }
   | { kind: 'state-reset' };

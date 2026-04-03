@@ -1,4 +1,4 @@
-import type { AppDocument, AppState, ChangeScope } from '../types.js';
+import type { AppDocument, AppState, ChangeScope, DocumentStatus } from '../types.js';
 import { store } from '../store/store.js';
 import { SectionEditor } from './section-editor.js';
 import { AddSectionBar } from './add-section-bar.js';
@@ -6,12 +6,16 @@ import { makeSortable } from '../dnd/sortable.js';
 import { icon } from '../utils/icons.js';
 import { onPasteText } from '../utils/clipboard.js';
 
+const STATUS_LABELS: Record<DocumentStatus, string> = { draft: 'Draft', review: 'Review', done: 'Done' };
+const STATUS_NEXT: Record<DocumentStatus, DocumentStatus> = { draft: 'review', review: 'done', done: 'draft' };
+
 export class DocumentEditor {
   readonly el: HTMLElement;
   readonly insertEl: HTMLButtonElement;
   private sectionEditorMap = new Map<string, SectionEditor>();
   private sectionsContainer: HTMLElement;
   private titleEl: HTMLElement;
+  private statusBadge: HTMLElement;
   private addSectionBar: AddSectionBar;
 
   constructor(doc: AppDocument, onInsertBefore: () => void) {
@@ -46,6 +50,15 @@ export class DocumentEditor {
     });
     this.titleEl.addEventListener('paste', onPasteText);
 
+    this.statusBadge = document.createElement('button');
+    this.statusBadge.type = 'button';
+    this.statusBadge.className = 'document-status-badge';
+    this.updateStatusBadge(doc.status);
+    this.statusBadge.addEventListener('click', () => {
+      const current = (this.statusBadge.dataset['status'] ?? 'draft') as DocumentStatus;
+      store.updateDocumentStatus(doc.id, STATUS_NEXT[current]);
+    });
+
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
     deleteBtn.className = 'icon-btn document-delete-btn';
@@ -55,6 +68,7 @@ export class DocumentEditor {
 
     header.appendChild(dragHandle);
     header.appendChild(this.titleEl);
+    header.appendChild(this.statusBadge);
     header.appendChild(deleteBtn);
 
     // ── Sections container ──────────────────────────────────────────────────
@@ -124,7 +138,17 @@ export class DocumentEditor {
           this.titleEl.textContent = doc.title;
         }
         break;
+
+      case 'document-status':
+        if (doc) this.updateStatusBadge(doc.status);
+        break;
     }
+  }
+
+  private updateStatusBadge(status: DocumentStatus | undefined): void {
+    const s = status ?? 'draft';
+    this.statusBadge.textContent = STATUS_LABELS[s];
+    this.statusBadge.dataset['status'] = s;
   }
 
   destroy(): void {

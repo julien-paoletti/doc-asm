@@ -1,10 +1,11 @@
-import type { AppState, ChangeScope, ID, SectionPlugin } from '../types.js';
+import type { AppState, ChangeScope, ID, SectionPlugin, DocumentStatus } from '../types.js';
 import {
   createEmptyAppState,
   addDocument,
   removeDocument,
   moveDocument,
   updateDocumentTitle,
+  updateDocumentStatus,
   addSection,
   removeSection,
   updateSectionData,
@@ -57,6 +58,13 @@ class AppStore {
     if (newState === this.state) return;
     this.state = newState;
     this.notify({ kind: 'document-title', documentId });
+  }
+
+  updateDocumentStatus(documentId: ID, status: DocumentStatus): void {
+    const newState = updateDocumentStatus(this.state, documentId, status);
+    if (newState === this.state) return;
+    this.state = newState;
+    this.notify({ kind: 'document-status', documentId });
   }
 
   // ── Section actions ─────────────────────────────────────────────────────

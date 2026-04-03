@@ -1,4 +1,4 @@
-import type { AppState, AppDocument, Section, ID, SectionPlugin } from '../types.js';
+import type { AppState, AppDocument, Section, ID, SectionPlugin, DocumentStatus } from '../types.js';
 import { generateId } from '../utils/id.js';
 import { moveArrayItem } from '../utils/array.js';
 
@@ -35,6 +35,12 @@ export function updateDocumentTitle(state: AppState, documentId: ID, title: stri
   return {
     documents: state.documents.map((d) => (d.id !== documentId ? d : { ...d, title })),
   };
+}
+
+export function updateDocumentStatus(state: AppState, documentId: ID, status: DocumentStatus): AppState {
+  const doc = state.documents.find((d) => d.id === documentId);
+  if (!doc || doc.status === status) return state;
+  return mapDoc(state, documentId, (d) => ({ ...d, status }));
 }
 
 // ── Section actions ───────────────────────────────────────────────────────
