@@ -5,33 +5,150 @@
   min-width: 0;
   padding: 8px 16px 12px;
   gap: 2px;
+  position: relative;
 }
 
+.checklist-editor__counter {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text-faint);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: 99px;
+  padding: 1px 8px;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  pointer-events: none;
+}
+
+.checklist-editor__counter--all-done {
+  color: var(--color-success);
+  background: var(--color-success-bg, color-mix(in srgb, var(--color-success) 12%, transparent));
+  border-color: var(--color-success);
+}
+
+/* ── Row ─────────────────────────────────────────────────────────────────── */
 .checklist-editor__item {
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  padding: 3px 0;
+  padding: 3px 4px;
+  border-radius: var(--radius-sm);
   cursor: text;
+  transition: padding-left 0.18s ease, background 0.12s;
 }
 
-.checklist-editor__checkbox {
+.checklist-editor__item:hover {
+  background: var(--color-primary-bg);
+}
+
+/* ── Custom checkbox ─────────────────────────────────────────────────────── */
+.checklist-editor__checkbox-wrap {
+  position: relative;
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  width: 17px;
+  height: 17px;
   margin-top: 3px;
-  accent-color: var(--color-primary);
   cursor: pointer;
 }
 
-.checklist-editor__text {
+/* Hidden native input — keeps keyboard/form semantics */
+.checklist-editor__checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* The visible box */
+.checklist-editor__checkbox-box {
+  width: 17px;
+  height: 17px;
+  border-radius: 4px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, background 0.15s, transform 0.12s;
+  pointer-events: none;
+}
+
+.checklist-editor__checkbox-wrap:hover .checklist-editor__checkbox-box {
+  border-color: var(--color-primary);
+}
+
+/* Checked state — fill the box */
+.checklist-editor__checkbox-input:checked + .checklist-editor__checkbox-box {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+/* Spring pop on check */
+.checklist-editor__checkbox-wrap.is-popping .checklist-editor__checkbox-box {
+  animation: cb-pop 0.25s ease;
+}
+
+@keyframes cb-pop {
+  0%   { transform: scale(1);    }
+  40%  { transform: scale(1.25); }
+  70%  { transform: scale(0.92); }
+  100% { transform: scale(1);    }
+}
+
+/* SVG checkmark — draws itself via stroke-dashoffset */
+.checklist-editor__checkmark {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 0;
+  color: #fff;
+  transition: opacity 0.1s;
+}
+
+.checklist-editor__checkmark svg {
+  width: 17px;
+  height: 17px;
+}
+
+.checklist-editor__checkmark path {
+  stroke-dasharray: 16;
+  stroke-dashoffset: 16;
+  transition: stroke-dashoffset 0.2s ease 0.05s;
+}
+
+.checklist-editor__checkbox-input:checked ~ .checklist-editor__checkmark {
+  opacity: 1;
+}
+
+.checklist-editor__checkbox-input:checked ~ .checklist-editor__checkmark path {
+  stroke-dashoffset: 0;
+}
+
+/* ── Text ────────────────────────────────────────────────────────────────── */
+.checklist-editor__text-wrap {
   flex: 1;
+  min-width: 0;
   font-size: 14px;
   line-height: 1.6;
+}
+
+.checklist-editor__text {
+  display: inline;
+  position: relative;
   color: var(--color-text);
   caret-color: var(--color-primary);
   outline: none;
-  min-width: 0;
+  transition: color 0.2s, opacity 0.2s;
 }
 
 .checklist-editor__text:empty::before {
@@ -40,7 +157,26 @@
   pointer-events: none;
 }
 
+/* Animated strikethrough via pseudo-element overlay */
+.checklist-editor__text::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 1.5px;
+  width: 100%;
+  background: var(--color-text-muted);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.25s ease;
+  pointer-events: none;
+}
+
 .checklist-editor__text--checked {
-  color: var(--color-text-muted);
-  text-decoration: line-through;
+  color: var(--color-text-faint);
+  opacity: 0.7;
+}
+
+.checklist-editor__text--checked::after {
+  transform: scaleX(1);
 }
