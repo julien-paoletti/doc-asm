@@ -39,11 +39,16 @@ export function mountApp(selector: string): void {
 
   const logo = document.createElement('div');
   logo.className = 'app-topbar__logo';
-  logo.innerHTML = `${icon('notebook')} Doc-Asm`;
+  logo.innerHTML = `${icon('notebook')} Doc-Asm <span class="app-topbar__tagline">Document assembly for developers</span>`;
+
+  const filenameWrapper = document.createElement('div');
+  filenameWrapper.className = 'app-topbar__filename-wrapper';
+  filenameWrapper.innerHTML = icon('fileText');
 
   const filenameEl = document.createElement('span');
   filenameEl.className = 'app-topbar__filename';
   filenameEl.textContent = 'untitled';
+  filenameWrapper.appendChild(filenameEl);
 
   const topBarActions = document.createElement('div');
   topBarActions.className = 'app-topbar__actions';
@@ -83,7 +88,7 @@ export function mountApp(selector: string): void {
   topBarActions.appendChild(saveBtn);
 
   topBar.appendChild(logo);
-  topBar.appendChild(filenameEl);
+  topBar.appendChild(filenameWrapper);
   topBar.appendChild(topBarActions);
   app.appendChild(topBar);
 

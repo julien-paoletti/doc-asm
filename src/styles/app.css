@@ -84,6 +84,7 @@
 
 /* ── Top bar ────────────────────────────────────────────────────────────── */
 .app-topbar {
+  position: relative;
   height: var(--topbar-height);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
@@ -103,10 +104,25 @@
   gap: 8px;
 }
 
-.app-topbar__filename {
-  font-size: 13px;
+.app-topbar__filename-wrapper {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--color-text-muted);
-  margin-left: 4px;
+  pointer-events: none;
+}
+
+.app-topbar__filename-wrapper svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.app-topbar__filename {
+  font-size: 15px;
 }
 
 .app-topbar__btn {
@@ -141,6 +157,16 @@
   font-size: 17px;
   color: var(--color-primary);
   letter-spacing: -0.3px;
+}
+
+.app-topbar__tagline {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--color-text-faint);
+  letter-spacing: 0;
+  padding-left: 6px;
+  border-left: 1px solid var(--color-border);
+  white-space: nowrap;
 }
 
 /* ── Workspace ──────────────────────────────────────────────────────────── */
