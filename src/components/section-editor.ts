@@ -22,9 +22,9 @@ export class SectionEditor {
 
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
-    deleteBtn.className = 'icon-btn section-delete-btn';
+    deleteBtn.className = 'section-delete-btn';
     deleteBtn.title = 'Delete section';
-    deleteBtn.innerHTML = icon('trash');
+    deleteBtn.innerHTML = icon('x');
     deleteBtn.addEventListener('click', () => store.removeSection(documentId, section.id));
     controls.appendChild(deleteBtn);
 
