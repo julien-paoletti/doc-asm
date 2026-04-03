@@ -1,4 +1,4 @@
-import type { AppState, AppDocument, Section } from '../types.js';
+import type { AppState, AppDocument, Section, DocumentStatus } from '../types.js';
 
 export const CURRENT_VERSION = 1;
 export const FILE_EXTENSION = '.docasm';
@@ -59,7 +59,9 @@ export function parse(raw: string): ParseResult {
       parsedSections.push({ id: s.id, type: s.type, data: s.data as Record<string, unknown> });
     }
 
-    parsedDocs.push({ id: d.id, title: d.title, sections: parsedSections });
+    const validStatuses: DocumentStatus[] = ['draft', 'review', 'done'];
+    const status = validStatuses.includes(d.status as DocumentStatus) ? d.status as DocumentStatus : undefined;
+    parsedDocs.push({ id: d.id, title: d.title, sections: parsedSections, status });
   }
 
   return { ok: true, state: { documents: parsedDocs } };
