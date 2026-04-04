@@ -15,7 +15,7 @@ export class DocumentEditor {
   private sectionEditorMap = new Map<string, SectionEditor>();
   private sectionsContainer: HTMLElement;
   private titleEl: HTMLElement;
-  private statusBadge: HTMLElement;
+  private statusBadge: HTMLButtonElement;
   private addSectionBar: AddSectionBar;
 
   constructor(doc: AppDocument, onInsertBefore: () => void) {
