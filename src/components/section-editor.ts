@@ -7,6 +7,7 @@ export class SectionEditor {
   readonly el: HTMLElement;
   private focusTitle?: () => void;
   private updateFn?: (data: Record<string, unknown>) => void;
+  private lastData: Record<string, unknown>;
 
   constructor(documentId: string, section: Section) {
     this.el = document.createElement('div');
@@ -35,6 +36,7 @@ export class SectionEditor {
     });
     this.focusTitle = focusTitle;
     this.updateFn = update as ((data: Record<string, unknown>) => void) | undefined;
+    this.lastData = section.data;
 
     this.el.appendChild(dragHandle);
     this.el.appendChild(contentEl);
@@ -46,6 +48,8 @@ export class SectionEditor {
   }
 
   update(data: Record<string, unknown>): void {
+    if (data === this.lastData) return;
+    this.lastData = data;
     this.updateFn?.(data);
   }
 

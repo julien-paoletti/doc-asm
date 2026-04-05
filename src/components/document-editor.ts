@@ -100,26 +100,36 @@ export class DocumentEditor {
     const s = doc.status ?? 'draft';
     if (this.statusBadge.dataset['status'] !== s) this.updateStatusBadge(doc.status);
 
-    const incoming = new Set(doc.sections.map((s) => s.id));
+    const incoming = new Set(doc.sections.map((sec) => sec.id));
+    let orderChanged = this.sectionEditorMap.size !== doc.sections.length;
+
     for (const [id, editor] of this.sectionEditorMap) {
       if (!incoming.has(id)) {
         editor.destroy();
         this.sectionEditorMap.delete(id);
+        orderChanged = true;
       }
     }
 
-    for (const section of doc.sections) {
+    doc.sections.forEach((section, i) => {
       const existing = this.sectionEditorMap.get(section.id);
       if (existing) {
         existing.update(section.data);
+        if (!orderChanged) {
+          const els = this.sectionsContainer.children;
+          if (els[i] !== existing.el) orderChanged = true;
+        }
       } else {
         this.sectionEditorMap.set(section.id, new SectionEditor(doc.id, section));
+        orderChanged = true;
       }
-    }
+    });
 
-    for (const section of doc.sections) {
-      const editor = this.sectionEditorMap.get(section.id);
-      if (editor) this.sectionsContainer.appendChild(editor.el);
+    if (orderChanged) {
+      for (const section of doc.sections) {
+        const editor = this.sectionEditorMap.get(section.id);
+        if (editor) this.sectionsContainer.appendChild(editor.el);
+      }
     }
   }
 

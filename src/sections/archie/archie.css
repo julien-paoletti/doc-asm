@@ -1,0 +1,118 @@
+.archie-editor {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Drop zone (empty state) ─────────────────────────────────────────────── */
+.archie-editor__dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 40px 16px;
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  text-align: center;
+}
+
+.archie-editor__dropzone:hover,
+.archie-editor__dropzone.is-over {
+  border-color: var(--color-primary-border-hover);
+  background: var(--color-primary-bg);
+}
+
+.archie-editor__dropzone svg {
+  width: 36px;
+  height: 36px;
+  color: var(--color-text-faint);
+  transition: color 0.15s;
+}
+
+.archie-editor__dropzone:hover svg,
+.archie-editor__dropzone.is-over svg {
+  color: var(--color-primary);
+}
+
+.archie-editor__dropzone-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+.archie-editor__dropzone-hint {
+  font-size: 11px;
+  color: var(--color-text-faint);
+}
+
+/* ── Diagram viewer ──────────────────────────────────────────────────────── */
+.archie-editor__viewer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.archie-editor__canvas {
+  display: block;
+  width: 100%;
+  height: 480px;
+  border-radius: var(--radius-md);
+  background: var(--color-surface-2);
+}
+
+.archie-editor__toolbar {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.archie-editor__viewer:hover .archie-editor__toolbar {
+  opacity: 1;
+}
+
+.archie-editor__btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: background 0.15s;
+}
+
+.archie-editor__btn:hover {
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.archie-editor__btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.archie-editor__filename {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-faint);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 2px 8px;
+  pointer-events: none;
+}

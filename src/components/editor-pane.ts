@@ -62,27 +62,39 @@ export class EditorPane {
 
   private reconcile(state: AppState): void {
     const incoming = new Set(state.documents.map((d) => d.id));
+    let orderChanged = this.documentEditorMap.size !== state.documents.length;
+
     for (const [id, editor] of this.documentEditorMap) {
       if (!incoming.has(id)) {
         editor.destroy();
         this.documentEditorMap.delete(id);
+        orderChanged = true;
       }
     }
 
-    for (const doc of state.documents) {
+    // Each doc occupies two adjacent slots (insertEl + el), so doc at index i
+    // lives at container child indices i*2 and i*2+1.
+    state.documents.forEach((doc, i) => {
       const existing = this.documentEditorMap.get(doc.id);
       if (existing) {
         existing.reconcile(doc);
+        if (!orderChanged) {
+          const els = this.documentsContainer.children;
+          if (els[i * 2] !== existing.insertEl || els[i * 2 + 1] !== existing.el) orderChanged = true;
+        }
       } else {
         this.documentEditorMap.set(doc.id, this.createDocumentEditor(doc));
+        orderChanged = true;
       }
-    }
+    });
 
-    for (const doc of state.documents) {
-      const editor = this.documentEditorMap.get(doc.id);
-      if (editor) {
-        this.documentsContainer.appendChild(editor.insertEl);
-        this.documentsContainer.appendChild(editor.el);
+    if (orderChanged) {
+      for (const doc of state.documents) {
+        const editor = this.documentEditorMap.get(doc.id);
+        if (editor) {
+          this.documentsContainer.appendChild(editor.insertEl);
+          this.documentsContainer.appendChild(editor.el);
+        }
       }
     }
   }
