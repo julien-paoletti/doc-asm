@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@julien-paoletti/archie-viewer": "file:../archie/viewer",
+    "@julien-paoletti/archie-viewer": "^0.4.0",
     "@tabler/icons": "^3.41.0",
     "highlight.js": "^11.11.1",
     "sortablejs": "^1.15.6"

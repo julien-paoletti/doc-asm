@@ -25,6 +25,11 @@ jobs:
           node-version: 24
           cache: npm
 
+      - name: Configure npm for Archie GitHub Packages
+        run: |
+          echo "@julien-paoletti:registry=https://npm.pkg.github.com" >> ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+
       - run: npm ci
 
       - run: npm run build
