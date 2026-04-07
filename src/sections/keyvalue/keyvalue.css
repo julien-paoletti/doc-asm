@@ -5,6 +5,7 @@
   min-width: 0;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-lg);
+  margin: 6px 10px;
 }
 
 .kv-editor__row {
@@ -17,11 +18,11 @@
   border-bottom: 0px solid var(--color-border);
 }
 
-.kv-editor__row:first-child > .kv-editor__key:first-child {
+.kv-editor__row:first-child>.kv-editor__key:first-child {
   border-top-left-radius: var(--radius-lg);
 }
 
-.kv-editor__row:last-child > .kv-editor__key:first-child {
+.kv-editor__row:last-child>.kv-editor__key:first-child {
   border-bottom-left-radius: var(--radius-lg);
 }
 

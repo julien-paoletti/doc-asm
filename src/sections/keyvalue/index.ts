@@ -156,6 +156,7 @@ export const KeyValuePlugin: SectionPlugin<KeyValueData> = {
       onEnd(from, to) {
         pairs = moveArrayItem(pairs, from, to);
         save();
+        renderRows();
       },
     });
 
