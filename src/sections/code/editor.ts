@@ -1,6 +1,7 @@
 import type { CodeData } from './index.js';
 import { onPasteText, makeCopyButton } from '../../utils/clipboard.js';
 import { hljs, LANGUAGES } from './languages.js';
+import { debounce } from '../../utils/debounce.js';
 
 export function createCodeEditor(
   data: CodeData,
@@ -97,11 +98,7 @@ export function createCodeEditor(
     sel.addRange(range);
   }
 
-  let highlightTimer: ReturnType<typeof setTimeout> | null = null;
-  function scheduleHighlight(): void {
-    if (highlightTimer !== null) clearTimeout(highlightTimer);
-    highlightTimer = setTimeout(() => { highlightTimer = null; highlight(); }, 200);
-  }
+  const scheduleHighlight = debounce(highlight, 200);
 
   codeArea.addEventListener('input', () => {
     onChange({ code: codeArea.textContent ?? '' });

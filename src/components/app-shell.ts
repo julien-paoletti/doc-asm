@@ -3,7 +3,8 @@ import { icon } from '../utils/icons.js';
 import { store } from '../store/store.js';
 import { saveFileAs, writeHandle, openFile } from '../persistence/file-io.js';
 import { createEmptyAppState } from '../store/actions.js';
-import { saveToLocalStorage, loadFromLocalStorage, clearLocalStorage } from '../persistence/autosave.js';
+import { saveToLocalStorage, loadFromLocalStorage } from '../persistence/autosave.js';
+import { debounce } from '../utils/debounce.js';
 import { showToast } from './toast.js';
 
 const THEMES = [
@@ -31,12 +32,7 @@ export function mountApp(selector: string): void {
   applyTheme(savedTheme);
 
   let fileHandle: FileSystemFileHandle | null = null;
-  let autosaveTimer: ReturnType<typeof setTimeout> | null = null;
-
-  function scheduleAutosave(): void {
-    if (autosaveTimer !== null) clearTimeout(autosaveTimer);
-    autosaveTimer = setTimeout(() => { saveToLocalStorage(store.getSnapshot()); }, 1000);
-  }
+  const scheduleAutosave = debounce(() => saveToLocalStorage(store.getSnapshot()), 1000);
 
   const app = document.createElement('div');
   app.className = 'app';
@@ -68,7 +64,6 @@ export function mountApp(selector: string): void {
   newBtn.addEventListener('click', () => {
     fileHandle = null;
     filenameEl.textContent = 'untitled';
-    clearLocalStorage();
     store.loadState(createEmptyAppState());
   });
 

@@ -17,7 +17,3 @@ export function loadFromLocalStorage(): AppState | null {
   const result = parse(raw);
   return result.ok ? result.state : null;
 }
-
-export function clearLocalStorage(): void {
-  localStorage.removeItem(STORAGE_KEY);
-}
