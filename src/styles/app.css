@@ -130,6 +130,13 @@
   padding: 5px 12px;
 }
 
+.app-topbar__sep {
+  width: 1px;
+  height: 20px;
+  background: var(--color-border);
+  flex-shrink: 0;
+}
+
 .app-topbar__theme-select {
   font-size: 12px;
   font-weight: 500;

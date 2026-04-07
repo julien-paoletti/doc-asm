@@ -4,6 +4,8 @@ import { store } from '../store/store.js';
 import { saveFileAs, writeHandle, openFile } from '../persistence/file-io.js';
 import { createEmptyAppState } from '../store/actions.js';
 import { saveToLocalStorage, loadFromLocalStorage } from '../persistence/autosave.js';
+import { exportMarkdown } from '../export/markdown.js';
+import { exportPrint } from '../export/print.js';
 import { debounce } from '../utils/debounce.js';
 import { showToast } from './toast.js';
 
@@ -57,21 +59,29 @@ export function mountApp(selector: string): void {
   const topBarActions = document.createElement('div');
   topBarActions.className = 'app-topbar__actions';
 
-  const newBtn = document.createElement('button');
-  newBtn.type = 'button';
-  newBtn.className = 'btn btn--secondary app-topbar__btn';
-  newBtn.innerHTML = `${icon('fileSpark')} New`;
-  newBtn.addEventListener('click', () => {
+  function makeBtn(
+    iconName: Parameters<typeof icon>[0],
+    label: string,
+    onClick: () => void,
+    variant: 'primary' | 'secondary' = 'secondary',
+    title?: string,
+  ): HTMLButtonElement {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `btn btn--${variant} app-topbar__btn`;
+    btn.innerHTML = `${icon(iconName)} ${label}`;
+    if (title) btn.title = title;
+    btn.addEventListener('click', onClick);
+    return btn;
+  }
+
+  const newBtn = makeBtn('fileSpark', 'New', () => {
     fileHandle = null;
     filenameEl.textContent = 'untitled';
     store.loadState(createEmptyAppState());
   });
 
-  const openBtn = document.createElement('button');
-  openBtn.type = 'button';
-  openBtn.className = 'btn btn--secondary app-topbar__btn';
-  openBtn.innerHTML = `${icon('folderOpen')} Open`;
-  openBtn.addEventListener('click', async () => {
+  const openBtn = makeBtn('folderOpen', 'Open', async () => {
     const result = await openFile();
     if (!result) return;
     fileHandle = result.handle;
@@ -79,11 +89,7 @@ export function mountApp(selector: string): void {
     store.loadState(result.state);
   });
 
-  const saveBtn = document.createElement('button');
-  saveBtn.type = 'button';
-  saveBtn.className = 'btn btn--primary app-topbar__btn';
-  saveBtn.innerHTML = `${icon('deviceFloppy')} Save`;
-  saveBtn.addEventListener('click', () => save());
+  const saveBtn = makeBtn('deviceFloppy', 'Save', () => save(), 'primary');
 
   const themeSelect = document.createElement('select');
   themeSelect.className = 'app-topbar__theme-select';
@@ -97,7 +103,16 @@ export function mountApp(selector: string): void {
   });
   themeSelect.addEventListener('change', () => applyTheme(themeSelect.value as ThemeId));
 
+  const markdownBtn = makeBtn('markdown', 'Markdown', () => exportMarkdown(store.getSnapshot()), 'secondary', 'Export as Markdown');
+  const printBtn    = makeBtn('printer',  'Print / PDF', () => exportPrint(store.getSnapshot()),   'secondary', 'Print or export as PDF');
+
+  const topBarSep = document.createElement('div');
+  topBarSep.className = 'app-topbar__sep';
+
   topBarActions.appendChild(themeSelect);
+  topBarActions.appendChild(markdownBtn);
+  topBarActions.appendChild(printBtn);
+  topBarActions.appendChild(topBarSep);
   topBarActions.appendChild(newBtn);
   topBarActions.appendChild(openBtn);
   topBarActions.appendChild(saveBtn);
