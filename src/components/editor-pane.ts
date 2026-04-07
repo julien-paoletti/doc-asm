@@ -37,6 +37,15 @@ export class EditorPane {
 
     this.unsubscribe = store.subscribe((scope, state) => this.onStoreChange(scope, state));
 
+    // Prevent clicks on the pane background from focusing contenteditable
+    // elements inside document cards at the same vertical position.
+    this.el.addEventListener('mousedown', (e) => {
+      if (e.target === this.el || e.target === this.documentsContainer) {
+        (document.activeElement as HTMLElement | null)?.blur();
+        e.preventDefault();
+      }
+    });
+
     this.el.appendChild(this.documentsContainer);
     this.el.appendChild(addDocBtn);
   }
