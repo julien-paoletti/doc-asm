@@ -2,6 +2,8 @@ import { EditorPane } from './editor-pane.js';
 import { icon } from '../utils/icons.js';
 import { store } from '../store/store.js';
 import { saveFileAs, writeHandle, openFile } from '../persistence/file-io.js';
+import { createEmptyAppState } from '../store/actions.js';
+import { saveToLocalStorage, loadFromLocalStorage, clearLocalStorage } from '../persistence/autosave.js';
 import { showToast } from './toast.js';
 
 const THEMES = [
@@ -29,6 +31,12 @@ export function mountApp(selector: string): void {
   applyTheme(savedTheme);
 
   let fileHandle: FileSystemFileHandle | null = null;
+  let autosaveTimer: ReturnType<typeof setTimeout> | null = null;
+
+  function scheduleAutosave(): void {
+    if (autosaveTimer !== null) clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(() => { saveToLocalStorage(store.getSnapshot()); }, 1000);
+  }
 
   const app = document.createElement('div');
   app.className = 'app';
@@ -52,6 +60,17 @@ export function mountApp(selector: string): void {
 
   const topBarActions = document.createElement('div');
   topBarActions.className = 'app-topbar__actions';
+
+  const newBtn = document.createElement('button');
+  newBtn.type = 'button';
+  newBtn.className = 'btn btn--secondary app-topbar__btn';
+  newBtn.innerHTML = `${icon('fileSpark')} New`;
+  newBtn.addEventListener('click', () => {
+    fileHandle = null;
+    filenameEl.textContent = 'untitled';
+    clearLocalStorage();
+    store.loadState(createEmptyAppState());
+  });
 
   const openBtn = document.createElement('button');
   openBtn.type = 'button';
@@ -84,6 +103,7 @@ export function mountApp(selector: string): void {
   themeSelect.addEventListener('change', () => applyTheme(themeSelect.value as ThemeId));
 
   topBarActions.appendChild(themeSelect);
+  topBarActions.appendChild(newBtn);
   topBarActions.appendChild(openBtn);
   topBarActions.appendChild(saveBtn);
 
@@ -114,6 +134,11 @@ export function mountApp(selector: string): void {
     }
   };
   document.addEventListener('keydown', onKeyDown);
+
+  // ── Auto-save ────────────────────────────────────────────────────────────
+  const savedState = loadFromLocalStorage();
+  if (savedState) store.loadState(savedState);
+  store.subscribe(scheduleAutosave);
 
   // ── Main workspace ───────────────────────────────────────────────────────
   const workspace = document.createElement('div');

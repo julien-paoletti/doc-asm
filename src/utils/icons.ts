@@ -70,6 +70,8 @@ export const icons = {
   checkmark: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17" fill="none"><path d="M3.5 8.5 L7 12 L13.5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
 
   diagram: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-schema"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 2h5v4h-5l0 -4"/><path d="M15 10h5v4h-5l0 -4"/><path d="M5 18h5v4h-5l0 -4"/><path d="M5 10h5v4h-5l0 -4"/><path d="M10 12h5"/><path d="M7.5 6v4"/><path d="M7.5 14v4"/></svg>`,
+
+  fileSpark: `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="tabler-icon tabler-icon-file-spark"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M19 22.5a4.75 4.75 0 0 1 3.5 -3.5a4.75 4.75 0 0 1 -3.5 -3.5a4.75 4.75 0 0 1 -3.5 3.5a4.75 4.75 0 0 1 3.5 3.5"/><path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M12 21h-5a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v3.5"/></svg>`,
 } as const;
 
 export type IconName = keyof typeof icons;
