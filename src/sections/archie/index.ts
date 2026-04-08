@@ -8,13 +8,14 @@ import { generateId } from '../../utils/id.js';
 export interface ArchieData extends Record<string, unknown> {
   diagram: SerializedDiagram | null;
   filename: string;
+  viewer: ArchieViewer | null;
 }
 
 export const ArchiePlugin: SectionPlugin<ArchieData> = {
   typeId: 'archie',
   label: 'Architecture diagram',
   icon: icon('diagram'),
-  defaultData: { diagram: null, filename: '' },
+  defaultData: { diagram: null, filename: '', viewer: null },
 
   createEditor(data, onChange) {
     const wrapper = document.createElement('div');
@@ -57,6 +58,7 @@ export const ArchiePlugin: SectionPlugin<ArchieData> = {
       viewer = new ArchieViewer(canvasId, { fitPadding: 40 });
       viewer.load(currentDiagram);
       viewer.fitToContent();
+      data.viewer = viewer;
     }
 
     function render(): void {

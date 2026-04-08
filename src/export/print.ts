@@ -1,3 +1,4 @@
+import { ArchieViewer } from '@julien-paoletti/archie-viewer';
 import type { AppState, AppDocument, Section } from '../types.js';
 
 function escape(text: string): string {
@@ -69,7 +70,8 @@ function sectionToHtml(section: Section): string {
     case 'image':
       return (d['src'] as string) ? `<img class="print-image" src="${d['src']}" alt="">` : '';
     case 'archie':
-      return `<div class="print-archie">[Architecture diagram — not available in print]</div>`;
+      const viewer = section.data.viewer as ArchieViewer;
+      return `<img class="print-image" src="${viewer.toDataURL()}" alt="Architecture diagram">`
     default:
       return '';
   }
@@ -170,6 +172,9 @@ export function exportPrint(state: AppState): void {
   if (!win) return;
   win.document.write(html);
   win.document.close();
-  win.focus();
-  win.print();
+
+  win.onload = () => setTimeout(function () {
+    win.print();
+    win.close();
+  }, 100);
 }
