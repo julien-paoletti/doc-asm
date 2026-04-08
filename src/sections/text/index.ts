@@ -21,7 +21,7 @@ export const TextPlugin: SectionPlugin<TextData> = {
   label: 'Text',
   icon: icon('article'),
   defaultData: { content: '' },
-  createEditor(data, onChange) {
+  createEditor(_id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = 'text-editor';
 

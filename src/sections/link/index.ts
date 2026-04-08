@@ -19,7 +19,7 @@ export const LinkPlugin: SectionPlugin<LinkData> = {
   icon: icon('link'),
   defaultData: { items: [] },
 
-  createEditor(data, onChange) {
+  createEditor(_id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = 'link-editor';
 

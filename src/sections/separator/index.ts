@@ -53,7 +53,7 @@ export const SeparatorPlugin: SectionPlugin<SeparatorData> = {
   icon: icon('separator'),
   defaultData: { style: 'line', size: 'md' },
 
-  createEditor(data, onChange) {
+  createEditor(_id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = `separator-editor separator-editor--${data.style} separator-editor--${data.size}`;
 

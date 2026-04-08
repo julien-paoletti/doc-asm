@@ -22,7 +22,7 @@ export const KeyValuePlugin: SectionPlugin<KeyValueData> = {
   icon: icon('keyValue'),
   defaultData: { pairs: [] },
 
-  createEditor(data, onChange) {
+  createEditor(_id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = 'kv-editor';
 

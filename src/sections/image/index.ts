@@ -13,7 +13,7 @@ export const ImagePlugin: SectionPlugin<ImageData> = {
   icon: icon('image'),
   defaultData: { src: '' },
 
-  createEditor(data, onChange) {
+  createEditor(_id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = 'image-editor';
 

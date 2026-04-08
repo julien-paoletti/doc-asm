@@ -21,7 +21,7 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
   icon: icon('checklist'),
   defaultData: { items: [] },
 
-  createEditor(data, onChange) {
+  createEditor(_id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = 'checklist-editor';
 

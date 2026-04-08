@@ -3,6 +3,7 @@ import { icon } from '../../utils/icons.js';
 import { onPasteText, makeCopyButton } from '../../utils/clipboard.js';
 
 export function createShellEditor(
+  _id: string,
   data: ShellData,
   onChange: (patch: Partial<ShellData>) => void
 ): { el: HTMLElement; focusTitle(): void; update(data: ShellData): void } {

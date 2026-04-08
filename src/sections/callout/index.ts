@@ -24,7 +24,7 @@ export const CalloutPlugin: SectionPlugin<CalloutData> = {
   icon: icon('callout'),
   defaultData: { variant: 'info', title: '', body: '' },
 
-  createEditor(data, onChange) {
+  createEditor(_id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = `callout-editor callout-editor--${data.variant}`;
 

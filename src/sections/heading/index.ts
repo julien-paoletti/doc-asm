@@ -13,7 +13,7 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
   label: 'Heading',
   icon: icon('heading'),
   defaultData: { level: 'h2', text: '' },
-  createEditor(data, onChange) {
+  createEditor(_id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = 'heading-editor';
 

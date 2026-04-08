@@ -5,19 +5,23 @@ import type { SerializedDiagram } from '@julien-paoletti/archie-viewer';
 import { icon } from '../../utils/icons.js';
 import { generateId } from '../../utils/id.js';
 
+const viewers = new Map<string, ArchieViewer>(); // sectionId → live viewer
+export function getViewer(sectionId: string): ArchieViewer | null {
+  return viewers.get(sectionId) ?? null;
+}
+
 export interface ArchieData extends Record<string, unknown> {
   diagram: SerializedDiagram | null;
   filename: string;
-  viewer: ArchieViewer | null;
 }
 
 export const ArchiePlugin: SectionPlugin<ArchieData> = {
   typeId: 'archie',
   label: 'Architecture diagram',
   icon: icon('diagram'),
-  defaultData: { diagram: null, filename: '', viewer: null },
+  defaultData: { diagram: null, filename: '' },
 
-  createEditor(data, onChange) {
+  createEditor(id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = 'archie-editor';
 
@@ -58,12 +62,13 @@ export const ArchiePlugin: SectionPlugin<ArchieData> = {
       viewer = new ArchieViewer(canvasId, { fitPadding: 40 });
       viewer.load(currentDiagram);
       viewer.fitToContent();
-      data.viewer = viewer;
+      viewers.set(id, viewer);
     }
 
     function render(): void {
       viewer?.destroy();
       viewer = null;
+      viewers.delete(id);
       wrapper.innerHTML = '';
 
       if (!currentDiagram) {

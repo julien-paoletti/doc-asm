@@ -4,6 +4,7 @@ import { hljs, LANGUAGES } from './languages.js';
 import { debounce } from '../../utils/debounce.js';
 
 export function createCodeEditor(
+  _id: string,
   data: CodeData,
   onChange: (patch: Partial<CodeData>) => void
 ): { el: HTMLElement; focusTitle(): void; update(data: CodeData): void } {
