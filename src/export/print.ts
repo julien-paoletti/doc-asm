@@ -113,6 +113,7 @@ const PRINT_CSS = `
 
   .print-text { line-height: 1.7; }
   .print-text ul, .print-text ol { padding-left: 1.5em; }
+  .print-text code { font-family: 'Consolas', 'Fira Code', monospace; font-size: 0.85em; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 3px; padding: 1px 5px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
   .print-callout { border-radius: 6px; padding: 12px 14px; border-left: 3px solid; }
   .print-callout--info    { background: #eff6ff; border-color: #3b82f6; }

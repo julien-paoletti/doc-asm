@@ -16,6 +16,28 @@ const TOOLBAR_COMMANDS: { cmd: string; label: string; title: string }[] = [
   { cmd: 'insertOrderedList',   label: icon('listNumbers'),   title: 'Numbered list'        },
 ];
 
+function toggleInlineCode(area: HTMLElement): void {
+  const sel = window.getSelection();
+  if (!sel || sel.rangeCount === 0) return;
+  const range = sel.getRangeAt(0);
+  const ancestor = range.commonAncestorContainer;
+  const codeEl = (ancestor.nodeType === Node.TEXT_NODE ? ancestor.parentElement : ancestor as Element)?.closest('code');
+  if (codeEl) {
+    // Unwrap: replace <code> with its text content
+    const text = document.createTextNode(codeEl.textContent ?? '');
+    codeEl.replaceWith(text);
+    const newRange = document.createRange();
+    newRange.selectNode(text);
+    sel.removeAllRanges();
+    sel.addRange(newRange);
+  } else {
+    if (range.collapsed) return;
+    const code = document.createElement('code');
+    range.surroundContents(code);
+  }
+  area.dispatchEvent(new Event('input'));
+}
+
 export const TextPlugin: SectionPlugin<TextData> = {
   typeId: 'text',
   label: 'Text',
@@ -49,6 +71,14 @@ export const TextPlugin: SectionPlugin<TextData> = {
       });
       toolbar.appendChild(btn);
     });
+
+    const codeBtn = document.createElement('button');
+    codeBtn.type = 'button';
+    codeBtn.className = 'text-editor__toolbar-btn';
+    codeBtn.innerHTML = icon('code');
+    codeBtn.title = 'Inline code';
+    codeBtn.addEventListener('mousedown', (e) => { e.preventDefault(); toggleInlineCode(area); });
+    toolbar.appendChild(codeBtn);
 
     wrapper.appendChild(toolbar);
     wrapper.appendChild(area);
