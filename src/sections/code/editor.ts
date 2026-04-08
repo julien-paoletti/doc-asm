@@ -78,7 +78,7 @@ export function createCodeEditor(
 
   function restoreCaret(el: HTMLElement, offset: number): void {
     const sel = window.getSelection();
-    if (!sel) return;
+    if (!sel || !el.isConnected) return;
     const range = document.createRange();
     let remaining = offset;
     const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
