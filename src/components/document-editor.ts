@@ -35,11 +35,6 @@ export class DocumentEditor {
     const header = document.createElement('div');
     header.className = 'document-editor__header';
 
-    const dragHandle = document.createElement('div');
-    dragHandle.className = 'drag-handle document-drag-handle';
-    dragHandle.setAttribute('aria-label', 'Move document');
-    dragHandle.innerHTML = icon('gripVertical');
-
     this.titleEl = document.createElement('div');
     this.titleEl.contentEditable = 'true';
     this.titleEl.className = 'document-editor__title';
@@ -61,15 +56,13 @@ export class DocumentEditor {
 
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
-    deleteBtn.className = 'icon-btn document-delete-btn';
+    deleteBtn.className = 'section-btn section-delete-btn document-delete-btn';
     deleteBtn.title = 'Delete document';
-    deleteBtn.innerHTML = icon('trash');
+    deleteBtn.innerHTML = icon('x');
     deleteBtn.addEventListener('click', () => store.removeDocument(doc.id));
 
-    header.appendChild(dragHandle);
     header.appendChild(this.titleEl);
     header.appendChild(this.statusBadge);
-    header.appendChild(deleteBtn);
 
     // ── Sections container ──────────────────────────────────────────────────
     this.sectionsContainer = document.createElement('div');
@@ -93,6 +86,7 @@ export class DocumentEditor {
     this.el.appendChild(header);
     this.el.appendChild(this.sectionsContainer);
     this.el.appendChild(this.addSectionBar.el);
+    this.el.appendChild(deleteBtn);
   }
 
   reconcile(doc: AppDocument): void {

@@ -105,24 +105,22 @@
 }
 
 .app-topbar__filename-wrapper {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 6px;
   color: var(--color-text-muted);
-  pointer-events: none;
+  padding-left: 12px;
+  border-left: 1px solid var(--color-border);
 }
 
 .app-topbar__filename-wrapper svg {
-  width: 16px;
-  height: 16px;
+  width: 14px;
+  height: 14px;
   flex-shrink: 0;
 }
 
 .app-topbar__filename {
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .app-topbar__btn {

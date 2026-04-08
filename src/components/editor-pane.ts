@@ -1,7 +1,6 @@
 import type { ChangeScope, AppState, AppDocument } from '../types.js';
 import { store } from '../store/store.js';
 import { DocumentEditor } from './document-editor.js';
-import { makeSortable } from '../dnd/sortable.js';
 import { icon } from '../utils/icons.js';
 
 export class EditorPane {
@@ -16,16 +15,6 @@ export class EditorPane {
 
     this.documentsContainer = document.createElement('div');
     this.documentsContainer.className = 'documents-container';
-
-    makeSortable({
-      container: this.documentsContainer,
-      group: 'documents',
-      onEnd: (from, to) => {
-        // SortableJS counts only draggable items; insert buttons have data-no-sort
-        // so the indices it reports correspond directly to document positions.
-        store.moveDocument(from, to);
-      },
-    });
 
     this.rebuild(store.getSnapshot());
 

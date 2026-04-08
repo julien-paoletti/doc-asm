@@ -10,8 +10,9 @@ function sectionToHtml(section: Section): string {
   switch (section.type) {
     case 'heading': {
       const level = (d['level'] as string) ?? 'h2';
-      const tag = level; // h1, h2, h3
-      return `<${tag} class="print-heading">${d['text'] ?? ''}</${tag}>`;
+      const color = d['color'] as string | undefined;
+      const style = color ? ` style="color:${color}"` : '';
+      return `<${level} class="print-heading"${style}>${d['text'] ?? ''}</${level}>`;
     }
     case 'text':
       return `<div class="print-text">${d['content'] ?? ''}</div>`;
