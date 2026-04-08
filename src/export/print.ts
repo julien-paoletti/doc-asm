@@ -71,7 +71,7 @@ function sectionToHtml(section: Section): string {
       return (d['src'] as string) ? `<img class="print-image" src="${d['src']}" alt="">` : '';
     case 'archie':
       const viewer = section.data.viewer as ArchieViewer;
-      return `<img class="print-image" src="${viewer.toDataURL()}" alt="Architecture diagram">`
+      return `<img class="print-archie" src="${viewer.exportImage(738)}" alt="Architecture diagram">`
     default:
       return '';
   }
@@ -139,7 +139,7 @@ const PRINT_CSS = `
   .print-separator--blank { height: 24px; }
 
   .print-image { max-width: 100%; border-radius: 4px; }
-  .print-archie { color: #94a3b8; font-style: italic; font-size: 12px; padding: 16px; text-align: center; border: 1px dashed #e2e8f0; border-radius: 6px; }
+  .print-archie { max-width: 100%; color: #94a3b8; font-style: italic; font-size: 12px; padding: 16px; text-align: center; border: 1px dashed #e2e8f0; border-radius: 6px; }
 
   @media print {
     body { padding: 0; }
