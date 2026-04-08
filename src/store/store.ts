@@ -8,6 +8,7 @@ import {
   updateDocumentStatus,
   addSection,
   removeSection,
+  duplicateSection,
   updateSectionData,
   moveSection,
 } from './actions.js';
@@ -122,6 +123,12 @@ class AppStore {
   removeSection(documentId: ID, sectionId: ID): void {
     const newState = removeSection(this.state, documentId, sectionId);
     this.commit(newState, { kind: 'section-remove', documentId, sectionId });
+  }
+
+  duplicateSection(documentId: ID, sectionId: ID): ID {
+    const [newState, newSectionId] = duplicateSection(this.state, documentId, sectionId);
+    this.commit(newState, { kind: 'section-add', documentId, sectionId: newSectionId });
+    return newSectionId;
   }
 
   updateSectionData(documentId: ID, sectionId: ID, patch: Record<string, unknown>): void {

@@ -22,9 +22,17 @@ export class SectionEditor {
     const controls = document.createElement('div');
     controls.className = 'section-controls';
 
+    const duplicateBtn = document.createElement('button');
+    duplicateBtn.type = 'button';
+    duplicateBtn.className = 'section-btn section-duplicate-btn';
+    duplicateBtn.title = 'Duplicate section';
+    duplicateBtn.innerHTML = icon('copyPlus');
+    duplicateBtn.addEventListener('click', () => store.duplicateSection(documentId, section.id));
+    controls.appendChild(duplicateBtn);
+
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
-    deleteBtn.className = 'section-delete-btn';
+    deleteBtn.className = 'section-btn section-delete-btn';
     deleteBtn.title = 'Delete section';
     deleteBtn.innerHTML = icon('x');
     deleteBtn.addEventListener('click', () => store.removeSection(documentId, section.id));
