@@ -77,7 +77,7 @@ export function duplicateSection(state: AppState, documentId: ID, sectionId: ID)
   const newState = mapDoc(state, documentId, (doc) => {
     const idx = doc.sections.findIndex((s) => s.id === sectionId);
     if (idx === -1) return doc;
-    const original = doc.sections[idx];
+    const original = doc.sections[idx]!;
     const copy: Section = { id: newId, type: original.type, data: { ...original.data } };
     const sections = [...doc.sections];
     sections.splice(idx + 1, 0, copy);
