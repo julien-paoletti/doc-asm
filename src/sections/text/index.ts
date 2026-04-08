@@ -7,13 +7,18 @@ export interface TextData extends Record<string, unknown> {
   content: string;
 }
 
-const TOOLBAR_COMMANDS: { cmd: string; label: string; title: string }[] = [
+type ToolbarCommand =
+  | { cmd: string; label: string; title: string }
+  | { handler: (area: HTMLElement) => void; label: string; title: string };
+
+const TOOLBAR_COMMANDS: ToolbarCommand[] = [
   { cmd: 'bold',                label: icon('bold'),          title: 'Bold (Ctrl+B)'        },
   { cmd: 'italic',              label: icon('italic'),        title: 'Italic (Ctrl+I)'      },
   { cmd: 'underline',           label: icon('underline'),     title: 'Underline (Ctrl+U)'   },
   { cmd: 'strikeThrough',       label: icon('strikethrough'), title: 'Strikethrough'         },
   { cmd: 'insertUnorderedList', label: icon('listBullet'),    title: 'Bullet list'          },
   { cmd: 'insertOrderedList',   label: icon('listNumbers'),   title: 'Numbered list'        },
+  { handler: toggleInlineCode,  label: icon('code'),          title: 'Inline code'          },
 ];
 
 function toggleInlineCode(area: HTMLElement): void {
@@ -23,7 +28,6 @@ function toggleInlineCode(area: HTMLElement): void {
   const ancestor = range.commonAncestorContainer;
   const codeEl = (ancestor.nodeType === Node.TEXT_NODE ? ancestor.parentElement : ancestor as Element)?.closest('code');
   if (codeEl) {
-    // Unwrap: replace <code> with its text content
     const text = document.createTextNode(codeEl.textContent ?? '');
     codeEl.replaceWith(text);
     const newRange = document.createRange();
@@ -58,27 +62,23 @@ export const TextPlugin: SectionPlugin<TextData> = {
     area.addEventListener('input', () => onChange({ content: area.innerHTML }));
     area.addEventListener('paste', onPasteText);
 
-    TOOLBAR_COMMANDS.forEach(({ cmd, label, title }) => {
+    TOOLBAR_COMMANDS.forEach((command) => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'text-editor__toolbar-btn';
-      btn.innerHTML = label;
-      btn.title = title;
+      btn.innerHTML = command.label;
+      btn.title = command.title;
       btn.addEventListener('mousedown', (e) => {
         e.preventDefault();
-        document.execCommand(cmd, false);
-        area.dispatchEvent(new Event('input'));
+        if ('handler' in command) {
+          command.handler(area);
+        } else {
+          document.execCommand(command.cmd, false);
+          area.dispatchEvent(new Event('input'));
+        }
       });
       toolbar.appendChild(btn);
     });
-
-    const codeBtn = document.createElement('button');
-    codeBtn.type = 'button';
-    codeBtn.className = 'text-editor__toolbar-btn';
-    codeBtn.innerHTML = icon('code');
-    codeBtn.title = 'Inline code';
-    codeBtn.addEventListener('mousedown', (e) => { e.preventDefault(); toggleInlineCode(area); });
-    toolbar.appendChild(codeBtn);
 
     wrapper.appendChild(toolbar);
     wrapper.appendChild(area);
