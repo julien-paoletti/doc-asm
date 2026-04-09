@@ -113,7 +113,14 @@ const PRINT_CSS = `
   h3.print-heading { font-size: 15px; }
 
   .print-text { line-height: 1.7; }
-  .print-text ul, .print-text ol { padding-left: 1.5em; }
+  .print-text ul, .print-text ol { padding-left: 1.6em; display: flex; flex-direction: column; gap: 2px; }
+  .print-text ul { list-style: none; }
+  .print-text ul li { position: relative; padding-left: 0.2em; }
+  .print-text ul li::before { content: ''; position: absolute; left: -1.1em; top: 0.62em; width: 5px; height: 5px; border-radius: 50%; background: #2563eb; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .print-text ol { list-style: none; counter-reset: ol-counter; }
+  .print-text ol li { position: relative; padding-left: 0.2em; counter-increment: ol-counter; }
+  .print-text ol li::before { content: counter(ol-counter) '.'; position: absolute; left: -1.4em; top: 0; font-size: 0.85em; font-weight: 600; color: #2563eb; line-height: 1.7; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .print-text ul ul, .print-text ol ol, .print-text ul ol, .print-text ol ul { margin-top: 2px; padding-left: 1.4em; }
   .print-text code { font-family: 'Consolas', 'Fira Code', monospace; font-size: 0.85em; background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 3px; padding: 1px 5px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 
   .print-callout { border-radius: 6px; padding: 12px 14px; border-left: 3px solid; }
