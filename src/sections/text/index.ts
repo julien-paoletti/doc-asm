@@ -21,12 +21,15 @@ const TOOLBAR_COMMANDS: ToolbarCommand[] = [
   { handler: toggleInlineCode,  label: icon('code'),          title: 'Inline code'          },
 ];
 
+function anchorElement(node: Node): Element | null {
+  return node.nodeType === Node.TEXT_NODE ? node.parentElement : node as Element;
+}
+
 function toggleInlineCode(area: HTMLElement): void {
   const sel = window.getSelection();
   if (!sel || sel.rangeCount === 0) return;
   const range = sel.getRangeAt(0);
-  const ancestor = range.commonAncestorContainer;
-  const codeEl = (ancestor.nodeType === Node.TEXT_NODE ? ancestor.parentElement : ancestor as Element)?.closest('code');
+  const codeEl = anchorElement(range.commonAncestorContainer)?.closest('code');
   if (codeEl) {
     const text = document.createTextNode(codeEl.textContent ?? '');
     codeEl.replaceWith(text);
@@ -61,6 +64,16 @@ export const TextPlugin: SectionPlugin<TextData> = {
     area.innerHTML = data.content;
     area.addEventListener('input', () => onChange({ content: area.innerHTML }));
     area.addEventListener('paste', onPasteText);
+    area.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const sel = window.getSelection();
+      if (!sel || sel.rangeCount === 0) return;
+      const inList = anchorElement(sel.getRangeAt(0).commonAncestorContainer)?.closest('li');
+      if (!inList) return;
+      e.preventDefault();
+      document.execCommand(e.shiftKey ? 'outdent' : 'indent', false);
+      area.dispatchEvent(new Event('input'));
+    });
 
     TOOLBAR_COMMANDS.forEach((command) => {
       const btn = document.createElement('button');

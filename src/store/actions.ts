@@ -1,6 +1,6 @@
 import type { AppState, AppDocument, Section, ID, SectionPlugin, DocumentStatus } from '../types.js';
 import { generateId } from '../utils/id.js';
-import { moveArrayItem } from '../utils/array.js';
+import { insertArrayItem, moveArrayItem } from '../utils/array.js';
 
 function emptyDocument(): AppDocument {
   return { id: generateId(), title: '', sections: [] };
@@ -56,12 +56,10 @@ export function addSection(
   afterIndex?: number
 ): [AppState, ID] {
   const section: Section = { id: generateId(), type: plugin.typeId, data: { ...plugin.defaultData } };
-  const newState = mapDoc(state, documentId, (doc) => {
-    const sections = [...doc.sections];
-    const insertAt = afterIndex !== undefined ? afterIndex + 1 : sections.length;
-    sections.splice(insertAt, 0, section);
-    return { ...doc, sections };
-  });
+  const newState = mapDoc(state, documentId, (doc) => ({
+    ...doc,
+    sections: insertArrayItem(doc.sections, section, afterIndex),
+  }));
   return [newState, section.id];
 }
 
@@ -79,9 +77,7 @@ export function duplicateSection(state: AppState, documentId: ID, sectionId: ID)
     if (idx === -1) return doc;
     const original = doc.sections[idx]!;
     const copy: Section = { id: newId, type: original.type, data: { ...original.data } };
-    const sections = [...doc.sections];
-    sections.splice(idx + 1, 0, copy);
-    return { ...doc, sections };
+    return { ...doc, sections: insertArrayItem(doc.sections, copy, idx) };
   });
   return [newState, newId];
 }

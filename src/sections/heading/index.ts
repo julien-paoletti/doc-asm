@@ -51,6 +51,14 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
     sep.className = 'heading-editor__sep';
     levels.appendChild(sep);
 
+    let currentColor = data.color ?? '';
+
+    function applyColor(value: string): void {
+      currentColor = value;
+      input.style.color = value || '';
+      colorBtns.forEach((b, i) => b.classList.toggle('is-active', COLORS[i]!.value === value));
+    }
+
     const colorBtns: HTMLButtonElement[] = [];
     COLORS.forEach(({ value, label }) => {
       const btn = document.createElement('button');
@@ -58,12 +66,11 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
       btn.className = 'heading-editor__color-btn';
       btn.title = label;
       btn.style.setProperty('--swatch', value || 'var(--color-text)');
-      btn.classList.toggle('is-active', (data.color ?? '') === value);
+      btn.classList.toggle('is-active', currentColor === value);
       btn.addEventListener('mousedown', (e) => {
         e.preventDefault();
         onChange({ color: value });
-        colorBtns.forEach((b) => b.classList.toggle('is-active', b === btn));
-        input.style.color = value || '';
+        applyColor(value);
       });
       colorBtns.push(btn);
       levels.appendChild(btn);
@@ -74,7 +81,7 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
     input.className = `heading-editor__input heading-editor__input--${data.level}`;
     input.setAttribute('data-placeholder', 'Heading…');
     input.innerHTML = data.text;
-    if (data.color) input.style.color = data.color;
+    if (currentColor) input.style.color = currentColor;
     input.addEventListener('input', () => onChange({ text: input.innerHTML }));
     input.addEventListener('paste', onPasteText);
 
@@ -91,10 +98,7 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
           levelBtns.forEach((b) => b.classList.toggle('is-active', b.textContent?.toLowerCase() === d.level));
         }
         const newColor = d.color ?? '';
-        if (input.style.color !== newColor) {
-          input.style.color = newColor;
-          colorBtns.forEach((b) => b.classList.toggle('is-active', b.title === (COLORS.find(c => c.value === newColor)?.label ?? 'Default')));
-        }
+        if (currentColor !== newColor) applyColor(newColor);
       },
     };
   },
