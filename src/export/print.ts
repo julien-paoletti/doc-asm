@@ -1,5 +1,6 @@
 import type { AppState, AppDocument, Section } from '../types.js';
 import { getViewer } from '../sections/archie/index.js';
+import { hljs } from '../sections/code/languages.js';
 
 function escape(text: string): string {
   return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -27,11 +28,14 @@ function sectionToHtml(section: Section): string {
     }
     case 'code': {
       const filename = escape(d['filename'] as string ?? '');
-      const code = escape(d['code'] as string ?? '');
-      const lang = escape(d['language'] as string ?? '');
+      const lang = (d['language'] as string) ?? '';
+      const raw = (d['code'] as string) ?? '';
+      const highlighted = lang
+        ? hljs.highlight(raw, { language: lang, ignoreIllegals: true }).value
+        : escape(raw);
       return `<div class="print-code">
         ${filename ? `<div class="print-code__filename">${filename}</div>` : ''}
-        <pre class="print-code__pre"><code class="language-${lang}">${code}</code></pre>
+        <pre class="print-code__pre"><code>${highlighted}</code></pre>
       </div>`;
     }
     case 'shell': {
@@ -133,8 +137,22 @@ const PRINT_CSS = `
 
   .print-code, .print-shell { border-radius: 6px; overflow: hidden; }
   .print-code__filename { font-family: monospace; font-size: 11px; background: #1e293b; color: #94a3b8; padding: 5px 12px; }
-  .print-code__pre, .print-shell__pre { background: #0f172a; color: #e2e8f0; padding: 14px; font-family: 'Consolas', 'Fira Code', monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-all; }
+  .print-code__pre, .print-shell__pre { background: #0f172a; color: #abb2bf; padding: 14px; font-family: 'Consolas', 'Fira Code', monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; white-space: pre-wrap; word-break: break-all; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .print-shell__label { font-size: 11px; background: #1e293b; color: #64748b; padding: 4px 12px; }
+
+  .hljs-keyword, .hljs-operator, .hljs-pattern-match { color: #c678dd; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-function, .hljs-title, .hljs-title.class_, .hljs-title.function_ { color: #61afef; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-string, .hljs-attr, .hljs-template-variable, .hljs-addition { color: #98c379; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-number, .hljs-literal, .hljs-type, .hljs-boolean { color: #d19a66; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-comment, .hljs-quote { color: #5c6370; font-style: italic; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-variable, .hljs-params { color: #e06c75; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-built_in, .hljs-class { color: #e5c07b; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-meta, .hljs-selector-tag, .hljs-doctag { color: #56b6c2; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-tag { color: #e06c75; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-name { color: #e06c75; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-deletion { color: #e06c75; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .hljs-emphasis { font-style: italic; }
+  .hljs-strong { font-weight: bold; }
 
   .print-checklist { display: flex; flex-direction: column; gap: 5px; }
   .print-checklist__item { line-height: 1.5; }
@@ -159,8 +177,8 @@ const PRINT_CSS = `
     .print-document:last-child { page-break-after: avoid; }
     a { color: inherit; text-decoration: none; }
     .print-callout,
-    .print-code__filename, .print-code__pre,
-    .print-shell__label, .print-shell__pre,
+    .print-code__filename,
+    .print-shell__label,
     .print-kv__key {
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
