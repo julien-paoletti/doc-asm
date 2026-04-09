@@ -1,7 +1,7 @@
 import './search.css';
 import type { AppState, Section } from '../types.js';
 import { icon } from '../utils/icons.js';
-import { escapeHtml } from '../utils/html.js';
+import { escapeHtml, stripHtml } from '../utils/html.js';
 
 interface SearchResult {
   documentId: string;
@@ -21,10 +21,6 @@ const SECTION_LABELS: Record<string, string> = {
   link: 'Links', image: 'Image', separator: 'Separator', archie: 'Diagram',
   title: 'Document title',
 };
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
-}
 
 function extractText(section: Section): string {
   const d = section.data;

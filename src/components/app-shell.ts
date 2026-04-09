@@ -9,6 +9,10 @@ import { exportPrint } from '../export/print.js';
 import { debounce } from '../utils/debounce.js';
 import { showToast } from './toast.js';
 import { SearchBar } from './search.js';
+import { TableOfContents } from './toc.js';
+
+const STORAGE_THEME = 'docasm-theme';
+const STORAGE_TOC   = 'docasm-toc';
 
 const THEMES = [
   { id: 'default',  label: 'Blue'     },
@@ -23,7 +27,7 @@ type ThemeId = typeof THEMES[number]['id'];
 
 function applyTheme(id: ThemeId): void {
   document.documentElement.dataset['theme'] = id === 'default' ? '' : id;
-  localStorage.setItem('docasm-theme', id);
+  localStorage.setItem(STORAGE_THEME, id);
 }
 
 export function mountApp(selector: string): void {
@@ -31,7 +35,7 @@ export function mountApp(selector: string): void {
   if (!root) throw new Error(`Element "${selector}" not found.`);
 
   // Restore persisted theme
-  const savedTheme = (localStorage.getItem('docasm-theme') ?? 'default') as ThemeId;
+  const savedTheme = (localStorage.getItem(STORAGE_THEME) ?? 'default') as ThemeId;
   applyTheme(savedTheme);
 
   let fileHandle: FileSystemFileHandle | null = null;
@@ -109,6 +113,12 @@ export function mountApp(selector: string): void {
   const markdownBtn = makeBtn('markdown', 'Markdown', () => exportMarkdown(store.getSnapshot()), 'secondary', 'Export as Markdown');
   const printBtn    = makeBtn('printer',  'Print / PDF', () => exportPrint(store.getSnapshot()),   'secondary', 'Print or export as PDF');
 
+  const tocToggleBtn = document.createElement('button');
+  tocToggleBtn.type = 'button';
+  tocToggleBtn.className = 'btn btn--secondary app-topbar__btn app-topbar__toc-toggle';
+  tocToggleBtn.title = 'Toggle table of contents';
+  tocToggleBtn.innerHTML = icon('layoutSidebar');
+
   const topBarSep = document.createElement('div');
   topBarSep.className = 'app-topbar__sep';
 
@@ -116,6 +126,7 @@ export function mountApp(selector: string): void {
   topBarActions.appendChild(markdownBtn);
   topBarActions.appendChild(printBtn);
   topBarActions.appendChild(topBarSep);
+  topBarActions.appendChild(tocToggleBtn);
   topBarActions.appendChild(newBtn);
   topBarActions.appendChild(openBtn);
   topBarActions.appendChild(saveBtn);
@@ -162,7 +173,19 @@ export function mountApp(selector: string): void {
   const workspace = document.createElement('div');
   workspace.className = 'app-workspace';
 
+  const toc = new TableOfContents();
+  const tocVisible = localStorage.getItem(STORAGE_TOC) !== 'hidden';
+  if (!tocVisible) toc.el.classList.add('is-hidden');
+  tocToggleBtn.classList.toggle('is-active', tocVisible);
+
+  tocToggleBtn.addEventListener('click', () => {
+    const nowHidden = toc.el.classList.toggle('is-hidden');
+    tocToggleBtn.classList.toggle('is-active', !nowHidden);
+    localStorage.setItem(STORAGE_TOC, nowHidden ? 'hidden' : 'visible');
+  });
+
   const editorPane = new EditorPane();
+  workspace.appendChild(toc.el);
   workspace.appendChild(editorPane.el);
   app.appendChild(workspace);
 
