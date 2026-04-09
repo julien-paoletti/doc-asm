@@ -158,6 +158,11 @@ export const TextPlugin: SectionPlugin<TextData> = {
 
     document.addEventListener('selectionchange', onSelectionChange);
 
+    wrapper.addEventListener('focusout', (e) => {
+      if (wrapper.contains(e.relatedTarget as Node | null)) return;
+      window.getSelection()?.removeAllRanges();
+    });
+
     wrapper.appendChild(toolbarEl);
     wrapper.appendChild(area);
 
