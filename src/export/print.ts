@@ -12,7 +12,7 @@ function sectionToHtml(section: Section): string {
     case 'heading': {
       const level = (d['level'] as string) ?? 'h2';
       const color = d['color'] as string | undefined;
-      const style = color ? ` style="color:${color}"` : '';
+      const style = color ? ` style="color:${color};-webkit-print-color-adjust:exact;print-color-adjust:exact"` : '';
       return `<${level} class="print-heading"${style}>${d['text'] ?? ''}</${level}>`;
     }
     case 'text':
@@ -103,7 +103,8 @@ const PRINT_CSS = `
 
   .print-document { max-width: 760px; margin: 0 auto 48px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 32px; page-break-inside: avoid; }
   .print-document__header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-  .print-document__title { font-size: 22px; font-weight: 700; flex: 1; text-align: center; }
+  .print-document__title { font-size: 22px; font-weight: 700; flex: 1; text-align: center; padding-bottom: 12px; position: relative; }
+  .print-document__title::after { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 48px; height: 3px; background: #2563eb; border-radius: 2px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .print-document__status { font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 99px; border: 1px solid; }
   .print-document__status--draft   { color: #64748b; border-color: #cbd5e1; }
   .print-document__status--review  { color: #b45309; border-color: #fcd34d; }
