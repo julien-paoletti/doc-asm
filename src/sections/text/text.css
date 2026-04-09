@@ -26,6 +26,14 @@
   border-bottom-width: 1px;
 }
 
+.text-editor__toolbar-sep {
+  width: 1px;
+  height: 16px;
+  background: var(--color-border);
+  margin: 0 4px;
+  flex-shrink: 0;
+}
+
 .text-editor__toolbar-btn {
   display: inline-flex;
   align-items: center;
@@ -42,6 +50,11 @@
 .text-editor__toolbar-btn:hover {
   background: var(--color-surface-3);
   color: var(--color-text);
+}
+
+.text-editor__toolbar-btn.is-active {
+  background: var(--color-primary-bg);
+  color: var(--color-primary);
 }
 
 .text-editor__area {
@@ -73,4 +86,40 @@
   border: 1px solid var(--color-border);
   border-radius: 3px;
   padding: 1px 5px;
+}
+
+/* ── Floating toolbar ───────────────────────────────────────────────────── */
+.text-editor__float {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 6px;
+  background: var(--pill-bg);
+  border: 1px solid var(--pill-border);
+  border-radius: var(--pill-radius);
+  box-shadow: var(--pill-shadow);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.12s, transform 0.12s;
+  white-space: nowrap;
+}
+
+.text-editor__float.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.text-editor__float .text-editor__toolbar-btn {
+  width: 24px;
+  height: 24px;
+}
+
+.text-editor__float .text-editor__toolbar-sep {
+  height: 14px;
 }

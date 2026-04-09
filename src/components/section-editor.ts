@@ -7,6 +7,7 @@ export class SectionEditor {
   readonly el: HTMLElement;
   private focusTitle?: () => void;
   private updateFn?: (data: Record<string, unknown>) => void;
+  private destroyFn?: () => void;
   private lastData: Record<string, unknown>;
 
   constructor(documentId: string, section: Section) {
@@ -39,11 +40,12 @@ export class SectionEditor {
     controls.appendChild(deleteBtn);
 
     const plugin = getPlugin(section.type);
-    const { el: contentEl, focusTitle, update } = plugin.createEditor(section.id, section.data as never, (patch) => {
+    const { el: contentEl, focusTitle, update, destroy } = plugin.createEditor(section.id, section.data as never, (patch) => {
       store.updateSectionData(documentId, section.id, patch as Record<string, unknown>);
     });
     this.focusTitle = focusTitle;
     this.updateFn = update as ((data: Record<string, unknown>) => void) | undefined;
+    this.destroyFn = destroy;
     this.lastData = section.data;
 
     this.el.appendChild(dragHandle);
@@ -62,6 +64,7 @@ export class SectionEditor {
   }
 
   destroy(): void {
+    this.destroyFn?.();
     this.el.remove();
   }
 }
