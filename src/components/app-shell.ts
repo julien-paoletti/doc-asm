@@ -8,6 +8,7 @@ import { exportMarkdown } from '../export/markdown.js';
 import { exportPrint } from '../export/print.js';
 import { debounce } from '../utils/debounce.js';
 import { showToast } from './toast.js';
+import { SearchBar } from './search.js';
 
 const THEMES = [
   { id: 'default',  label: 'Blue'     },
@@ -103,6 +104,8 @@ export function mountApp(selector: string): void {
   });
   themeSelect.addEventListener('change', () => applyTheme(themeSelect.value as ThemeId));
 
+  const searchBar = new SearchBar(() => store.getSnapshot());
+
   const markdownBtn = makeBtn('markdown', 'Markdown', () => exportMarkdown(store.getSnapshot()), 'secondary', 'Export as Markdown');
   const printBtn    = makeBtn('printer',  'Print / PDF', () => exportPrint(store.getSnapshot()),   'secondary', 'Print or export as PDF');
 
@@ -125,6 +128,11 @@ export function mountApp(selector: string): void {
   // ── Ctrl+S shortcut ──────────────────────────────────────────────────────
   // Registered once per mountApp call; removed if the app element is replaced.
   const onKeyDown = (e: KeyboardEvent): void => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+      e.preventDefault();
+      searchBar.focus();
+      return;
+    }
     if ((e.ctrlKey || e.metaKey) && e.key === 's') {
       e.preventDefault();
       save();
@@ -158,6 +166,7 @@ export function mountApp(selector: string): void {
   workspace.appendChild(editorPane.el);
   app.appendChild(workspace);
 
+  app.appendChild(searchBar.el);
   root.appendChild(app);
 
   async function save(): Promise<void> {

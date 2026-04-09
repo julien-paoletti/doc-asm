@@ -1,10 +1,7 @@
 import type { AppState, AppDocument, Section } from '../types.js';
 import { getViewer } from '../sections/archie/index.js';
 import { hljs } from '../sections/code/languages.js';
-
-function escape(text: string): string {
-  return text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
+import { escapeHtml as escape } from '../utils/html.js';
 
 function sectionToHtml(section: Section): string {
   const d = section.data;
