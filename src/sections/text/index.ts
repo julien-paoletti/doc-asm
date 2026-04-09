@@ -95,10 +95,7 @@ export const TextPlugin: SectionPlugin<TextData> = {
     const wrapper = document.createElement('div');
     wrapper.className = 'text-editor';
 
-    // ── Editable area ────────────────────────────────────────────────────────
     const area = document.createElement('div');
-
-    // ── Fixed toolbar ────────────────────────────────────────────────────────
     const { el: toolbarEl, cmdBtnMap } = buildToolbar(TOOLBAR_COMMANDS, area);
     toolbarEl.className = 'text-editor__toolbar';
     area.contentEditable = 'true';
@@ -118,35 +115,44 @@ export const TextPlugin: SectionPlugin<TextData> = {
       area.dispatchEvent(new Event('input'));
     });
 
-    // ── Floating toolbar ─────────────────────────────────────────────────────
     const { el: floatEl, cmdBtnMap: floatCmdBtnMap } = buildToolbar(TOOLBAR_COMMANDS, area);
     floatEl.className = 'text-editor__float';
     floatEl.setAttribute('aria-hidden', 'true');
     document.body.appendChild(floatEl);
 
-    function updateActiveStates(btnMap: Map<string, HTMLButtonElement>): void {
+    // Read dimensions once — the float's size doesn't change after creation
+    floatEl.classList.add('is-visible');
+    const floatW = floatEl.offsetWidth;
+    const floatH = floatEl.offsetHeight;
+    floatEl.classList.remove('is-visible');
+
+    function updateActiveStates(...maps: Map<string, HTMLButtonElement>[]): void {
       ACTIVE_CMDS.forEach((cmd) => {
-        btnMap.get(cmd)?.classList.toggle('is-active', document.queryCommandState(cmd));
+        const active = document.queryCommandState(cmd);
+        maps.forEach((m) => m.get(cmd)?.classList.toggle('is-active', active));
       });
     }
 
     function positionFloat(): void {
       const sel = window.getSelection();
-      if (!sel || sel.rangeCount === 0 || sel.isCollapsed || !area.contains(sel.anchorNode)) {
+      if (!sel || sel.rangeCount === 0 || sel.isCollapsed) {
         floatEl.classList.remove('is-visible');
         return;
       }
       const rect = sel.getRangeAt(0).getBoundingClientRect();
-      const fw = floatEl.offsetWidth;
-      const left = Math.max(8, Math.min(rect.left + rect.width / 2 - fw / 2, window.innerWidth - fw - 8));
-      floatEl.style.left = `${left + window.scrollX}px`;
-      floatEl.style.top = `${rect.top + window.scrollY - floatEl.offsetHeight - 8}px`;
+      const left = Math.max(8, Math.min(rect.left + rect.width / 2 - floatW / 2, window.innerWidth - floatW - 8));
+      floatEl.style.left = `${left}px`;
+      floatEl.style.top = `${rect.top - floatH - 8}px`;
       floatEl.classList.add('is-visible');
-      updateActiveStates(floatCmdBtnMap);
     }
 
     const onSelectionChange = (): void => {
-      updateActiveStates(cmdBtnMap);
+      const sel = window.getSelection();
+      if (!sel || !area.contains(sel.anchorNode)) {
+        floatEl.classList.remove('is-visible');
+        return;
+      }
+      updateActiveStates(cmdBtnMap, floatCmdBtnMap);
       positionFloat();
     };
 

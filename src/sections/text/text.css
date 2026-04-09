@@ -163,7 +163,7 @@
 
 /* ── Floating toolbar ───────────────────────────────────────────────────── */
 .text-editor__float {
-  position: absolute;
+  position: fixed;
   display: flex;
   align-items: center;
   gap: 2px;

@@ -51,23 +51,28 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
     sep.className = 'heading-editor__sep';
     levels.appendChild(sep);
 
-    let currentColor = data.color ?? '';
+    const colorBtns: HTMLButtonElement[] = [];
+
+    const input = document.createElement('div');
+    input.contentEditable = 'true';
+    input.className = `heading-editor__input heading-editor__input--${data.level}`;
+    input.setAttribute('data-placeholder', 'Heading…');
+    input.innerHTML = data.text;
+    input.addEventListener('input', () => onChange({ text: input.innerHTML }));
+    input.addEventListener('paste', onPasteText);
 
     function applyColor(value: string): void {
-      currentColor = value;
       if (value) input.style.color = value;
       else input.style.removeProperty('color');
       colorBtns.forEach((b, i) => b.classList.toggle('is-active', COLORS[i]!.value === value));
     }
 
-    const colorBtns: HTMLButtonElement[] = [];
     COLORS.forEach(({ value, label }) => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'heading-editor__color-btn';
       btn.title = label;
       btn.style.setProperty('--swatch', value || 'var(--color-primary)');
-      btn.classList.toggle('is-active', currentColor === value);
       btn.addEventListener('mousedown', (e) => {
         e.preventDefault();
         onChange({ color: value });
@@ -77,14 +82,7 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
       levels.appendChild(btn);
     });
 
-    const input = document.createElement('div');
-    input.contentEditable = 'true';
-    input.className = `heading-editor__input heading-editor__input--${data.level}`;
-    input.setAttribute('data-placeholder', 'Heading…');
-    input.innerHTML = data.text;
-    if (currentColor) input.style.color = currentColor;
-    input.addEventListener('input', () => onChange({ text: input.innerHTML }));
-    input.addEventListener('paste', onPasteText);
+    applyColor(data.color ?? '');
 
     wrapper.appendChild(levels);
     wrapper.appendChild(input);
@@ -98,8 +96,7 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
           input.className = `heading-editor__input heading-editor__input--${d.level}`;
           levelBtns.forEach((b) => b.classList.toggle('is-active', b.textContent?.toLowerCase() === d.level));
         }
-        const newColor = d.color ?? '';
-        if (currentColor !== newColor) applyColor(newColor);
+        applyColor(d.color ?? '');
       },
     };
   },
