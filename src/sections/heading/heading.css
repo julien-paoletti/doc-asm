@@ -75,9 +75,19 @@
 
 .heading-editor__input {
   width: 100%;
-  color: var(--color-text);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   caret-color: var(--color-primary);
   outline: none;
+}
+
+.heading-editor__input[style*='color'] {
+  background: none;
+  -webkit-background-clip: unset;
+  -webkit-text-fill-color: unset;
+  background-clip: unset;
 }
 
 .heading-editor__input:empty::before {

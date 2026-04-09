@@ -52,13 +52,30 @@
   font-size: 2rem;
   font-weight: 700;
   line-height: 1.2;
-  color: var(--color-text);
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   caret-color: var(--color-primary);
   outline: none;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   pointer-events: none;
+  padding-bottom: 12px;
+}
+
+.document-editor__title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48px;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+  border-radius: 2px;
 }
 
 .document-editor__title[contenteditable='true'] {
@@ -67,7 +84,7 @@
 
 .document-editor__title:empty::before {
   content: attr(data-placeholder);
-  color: var(--color-text-faint);
+  -webkit-text-fill-color: var(--color-text-faint);
   pointer-events: none;
 }
 

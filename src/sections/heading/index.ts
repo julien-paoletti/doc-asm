@@ -55,7 +55,8 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
 
     function applyColor(value: string): void {
       currentColor = value;
-      input.style.color = value || '';
+      if (value) input.style.color = value;
+      else input.style.removeProperty('color');
       colorBtns.forEach((b, i) => b.classList.toggle('is-active', COLORS[i]!.value === value));
     }
 
@@ -65,7 +66,7 @@ export const HeadingPlugin: SectionPlugin<HeadingData> = {
       btn.type = 'button';
       btn.className = 'heading-editor__color-btn';
       btn.title = label;
-      btn.style.setProperty('--swatch', value || 'var(--color-text)');
+      btn.style.setProperty('--swatch', value || 'var(--color-primary)');
       btn.classList.toggle('is-active', currentColor === value);
       btn.addEventListener('mousedown', (e) => {
         e.preventDefault();
