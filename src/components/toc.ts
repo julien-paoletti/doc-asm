@@ -4,6 +4,8 @@ import { store } from '../store/store.js';
 import { icon } from '../utils/icons.js';
 import { escapeHtml, stripHtml } from '../utils/html.js';
 
+const STORAGE_KEY = 'docasm-toc';
+
 function headingLabel(data: Record<string, unknown>): string {
   return stripHtml((data['text'] as string) ?? '') || 'Untitled heading';
 }
@@ -29,29 +31,58 @@ function affectsToc(scope: ChangeScope, state: AppState): boolean {
 
 export class TableOfContents {
   readonly el: HTMLElement;
+  private panel: HTMLElement;
   private listEl: HTMLElement;
+  private toggleBtn: HTMLButtonElement;
   private collapsed = new Set<string>();
   private unsubscribe: () => void;
 
   constructor() {
-    this.el = document.createElement('nav');
+    this.el = document.createElement('div');
     this.el.className = 'toc';
-    this.el.setAttribute('aria-label', 'Table of contents');
+
+    this.panel = document.createElement('nav');
+    this.panel.className = 'toc__panel';
+    this.panel.setAttribute('aria-label', 'Table of contents');
 
     const header = document.createElement('div');
     header.className = 'toc__header';
-    header.innerHTML = `<span class="toc__title">${icon('layoutSidebar')} Contents</span>`;
+    header.innerHTML = `<span class="toc__title">${icon('listTree')} Contents</span>`;
 
     this.listEl = document.createElement('div');
     this.listEl.className = 'toc__list';
 
-    this.el.appendChild(header);
-    this.el.appendChild(this.listEl);
+    this.panel.appendChild(header);
+    this.panel.appendChild(this.listEl);
+
+    this.toggleBtn = document.createElement('button');
+    this.toggleBtn.type = 'button';
+    this.toggleBtn.className = 'toc__toggle';
+    this.toggleBtn.title = 'Toggle table of contents';
+    this.toggleBtn.innerHTML = icon('listTree');
+    this.toggleBtn.addEventListener('click', () => this.toggle());
+
+    this.el.appendChild(this.panel);
+    this.el.appendChild(this.toggleBtn);
+
+    const visible = localStorage.getItem(STORAGE_KEY) !== 'hidden';
+    this.setVisible(visible, false);
 
     this.render(store.getSnapshot());
     this.unsubscribe = store.subscribe((scope, state) => {
       if (affectsToc(scope, state)) this.render(state);
     });
+  }
+
+  private toggle(): void {
+    this.setVisible(this.panel.classList.contains('is-hidden'), true);
+  }
+
+  private setVisible(visible: boolean, persist: boolean): void {
+    this.panel.classList.toggle('is-hidden', !visible);
+    this.el.classList.toggle('is-collapsed', !visible);
+    this.toggleBtn.classList.toggle('is-active', visible);
+    if (persist) localStorage.setItem(STORAGE_KEY, visible ? 'visible' : 'hidden');
   }
 
   private render(state: AppState): void {

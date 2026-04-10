@@ -18,7 +18,7 @@ export interface ChecklistData extends Record<string, unknown> {
 export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
   typeId: 'checklist',
   label: 'Checklist',
-  icon: icon('checklist'),
+  icon: icon('listCheck'),
   defaultData: { items: [] },
 
   createEditor(_id, data, onChange) {

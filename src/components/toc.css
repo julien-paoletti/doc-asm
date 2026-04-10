@@ -1,21 +1,57 @@
+/* ── Outer wrapper ──────────────────────────────────────────────────────── */
 .toc {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+}
+
+/* ── Inner panel (clips content during collapse) ────────────────────────── */
+.toc__panel {
   width: 220px;
-  min-width: 220px;
   display: flex;
   flex-direction: column;
   background: var(--color-surface);
   border-right: 1px solid var(--color-border);
   overflow: hidden;
-  transition: width 0.2s ease, min-width 0.2s ease, opacity 0.2s ease;
+  transition: width 0.2s ease, opacity 0.2s ease;
 }
 
-.toc.is-hidden {
+.toc__panel.is-hidden {
   width: 0;
-  min-width: 0;
   opacity: 0;
   pointer-events: none;
 }
 
+/* ── Toggle button — right edge of the outer wrapper ────────────────────── */
+.toc__toggle {
+  position: absolute;
+  top: 12px;
+  right: -32px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: none;
+  color: var(--color-text-faint);
+  box-shadow: 2px 1px 4px rgba(0, 0, 0, .06);
+  transition: color 0.12s, background 0.12s;
+  z-index: 10;
+}
+
+.toc__toggle:hover {
+  color: var(--color-primary);
+  background: var(--color-primary-bg);
+}
+
+.toc__toggle.is-active {
+  color: var(--color-primary);
+}
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
 .toc__header {
   display: flex;
   align-items: center;
@@ -40,29 +76,22 @@
   flex-shrink: 0;
 }
 
+/* ── List ───────────────────────────────────────────────────────────────── */
 .toc__list {
   flex: 1;
   overflow-y: auto;
   padding: 6px 0;
 }
 
-.toc__list::-webkit-scrollbar {
-  width: 4px;
-}
-.toc__list::-webkit-scrollbar-track {
-  background: transparent;
-}
-.toc__list::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 2px;
-}
+.toc__list::-webkit-scrollbar { width: 4px; }
+.toc__list::-webkit-scrollbar-track { background: transparent; }
+.toc__list::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
 
 /* ── Document row ───────────────────────────────────────────────────────── */
 .toc-doc {
   display: flex;
   align-items: center;
-  gap: 0;
-  padding: 0 4px 0 4px;
+  padding: 0 4px;
   margin-top: 4px;
 }
 
@@ -119,7 +148,6 @@
   text-overflow: ellipsis;
   border-radius: var(--radius-sm);
   transition: background 0.12s, color 0.12s;
-  position: relative;
 }
 
 .toc-item:hover {
@@ -127,11 +155,5 @@
   color: var(--color-primary);
 }
 
-.toc-item[data-indent='1'] {
-  font-size: 11px;
-}
-
-.toc-item[data-indent='2'] {
-  font-size: 11px;
-  color: var(--color-text-faint);
-}
+.toc-item[data-indent='1'] { font-size: 11px; }
+.toc-item[data-indent='2'] { font-size: 11px; color: var(--color-text-faint); }
