@@ -274,13 +274,13 @@
 }
 
 .section-btn svg {
-  width: 10px;
-  height: 10px;
+  width: 13px;
+  height: 13px;
 }
 
 .section-btn {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   background: var(--color-surface);
   border: 1.5px solid var(--color-border);
