@@ -115,7 +115,11 @@ export function mountApp(selector: string): void {
   const topBarSep = document.createElement('div');
   topBarSep.className = 'app-topbar__sep';
 
+  const topBarSep2 = document.createElement('div');
+  topBarSep2.className = 'app-topbar__sep';
+
   topBarActions.appendChild(themeSelect);
+  topBarActions.appendChild(topBarSep2);
   topBarActions.appendChild(markdownBtn);
   topBarActions.appendChild(printBtn);
   topBarActions.appendChild(topBarSep);
