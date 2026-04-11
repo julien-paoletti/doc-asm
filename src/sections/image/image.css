@@ -3,6 +3,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
+  gap: 6px;
 }
 
 /* ── Drop zone (empty state) ─────────────────────────────────────────────── */
@@ -49,6 +50,95 @@
   color: var(--color-text-faint);
 }
 
+/* ── Annotation toolbar ──────────────────────────────────────────────────── */
+.image-editor__toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 6px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  width: fit-content;
+  align-self: center;
+}
+
+.image-editor__toolbar-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--color-border);
+  margin: 0 2px;
+  flex-shrink: 0;
+}
+
+.image-editor__tool-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  transition: background 0.12s, color 0.12s;
+  flex-shrink: 0;
+}
+
+.image-editor__tool-btn:hover {
+  background: var(--color-surface-3);
+  color: var(--color-text);
+}
+
+.image-editor__tool-btn.is-active {
+  background: var(--color-primary-bg-deep);
+  color: var(--color-primary);
+}
+
+.image-editor__delete-btn:hover {
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
+}
+
+.image-editor__tool-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ── Color palette ───────────────────────────────────────────────────────── */
+.image-editor__colors {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.image-editor__color-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--dot-color);
+  border: 2px solid transparent;
+  transition: transform 0.1s, border-color 0.1s;
+  flex-shrink: 0;
+}
+
+.image-editor__color-dot:hover {
+  transform: scale(1.2);
+}
+
+.image-editor__color-dot.is-active {
+  border-color: var(--color-text);
+  transform: scale(1.15);
+}
+
+/* White dot needs a visible border always */
+.image-editor__color-dot[style*="#ffffff"],
+.image-editor__color-dot[style*="#fff"] {
+  border-color: var(--color-border);
+}
+.image-editor__color-dot[style*="#ffffff"].is-active,
+.image-editor__color-dot[style*="#fff"].is-active {
+  border-color: var(--color-text-muted);
+}
+
 /* ── Image display ───────────────────────────────────────────────────────── */
 .image-editor__preview {
   position: relative;
@@ -62,8 +152,11 @@
   width: 100%;
   height: auto;
   border-radius: var(--radius-md);
+  user-select: none;
+  pointer-events: none;
 }
 
+/* ── Replace button ──────────────────────────────────────────────────────── */
 .image-editor__replace-btn {
   position: absolute;
   bottom: 8px;
@@ -82,6 +175,8 @@
   cursor: pointer;
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.15);
+  pointer-events: none;
+  z-index: 2;
 }
 
 .image-editor__replace-btn svg {
@@ -91,6 +186,7 @@
 
 .image-editor__preview:hover .image-editor__replace-btn {
   opacity: 1;
+  pointer-events: auto;
 }
 
 .image-editor__replace-btn:hover {

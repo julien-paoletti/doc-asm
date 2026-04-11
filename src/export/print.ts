@@ -2,6 +2,7 @@ import type { AppState, AppDocument, Section } from '../types.js';
 import { getViewer } from '../sections/archie/index.js';
 import { hljs } from '../sections/code/languages.js';
 import { escapeHtml as escape } from '../utils/html.js';
+import { AnnotationLayer, type Shape } from '../sections/image/annotations.js';
 
 function sectionToHtml(section: Section): string {
   const d = section.data;
@@ -69,8 +70,18 @@ function sectionToHtml(section: Section): string {
       return (d['style'] as string) === 'blank'
         ? `<div class="print-separator--blank"></div>`
         : `<hr class="print-separator">`;
-    case 'image':
-      return (d['src'] as string) ? `<img class="print-image" src="${d['src']}" alt="">` : '';
+    case 'image': {
+      const src = d['src'] as string;
+      if (!src) return '';
+      const shapes = (d['shapes'] as Shape[] | undefined) ?? [];
+      if (shapes.length === 0) return `<img class="print-image" src="${src}" alt="">`;
+      // Wrap image + SVG annotations in a relative container
+      const svgStr = AnnotationLayer.exportSvgString(shapes, 760);
+      return `<div class="print-image-wrap">
+        <img class="print-image" src="${src}" alt="">
+        ${svgStr}
+      </div>`;
+    }
     case 'archie': {
       const viewer = getViewer(section.id);
       return viewer
@@ -166,7 +177,8 @@ const PRINT_CSS = `
   .print-separator { border: none; border-top: 1px solid #e2e8f0; }
   .print-separator--blank { height: 24px; }
 
-  .print-image { max-width: 100%; border-radius: 4px; }
+  .print-image { max-width: 100%; border-radius: 4px; display: block; }
+  .print-image-wrap { position: relative; display: inline-block; width: 100%; }
   .print-archie { color: #94a3b8; font-style: italic; font-size: 12px; padding: 16px; text-align: center; border: 1px dashed #e2e8f0; border-radius: 6px; }
 
   @media print {

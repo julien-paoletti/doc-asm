@@ -12,6 +12,7 @@
     "@julien-paoletti/archie-viewer": "^0.7.5",
     "@tabler/icons": "^3.41.0",
     "highlight.js": "^11.11.1",
+    "roughjs": "^4.6.6",
     "sortablejs": "^1.15.6"
   },
   "devDependencies": {
