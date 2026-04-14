@@ -5,7 +5,7 @@ import { saveFileAs, writeHandle, openFile } from '../persistence/file-io.js';
 import { createEmptyAppState } from '../store/actions.js';
 import { saveToLocalStorage, loadFromLocalStorage } from '../persistence/autosave.js';
 import { exportMarkdown } from '../export/markdown.js';
-import { exportPrint } from '../export/print.js';
+import { exportPrint, copyDocumentHtml } from '../export/print.js';
 import { debounce } from '../utils/debounce.js';
 import { showToast } from './toast.js';
 import { SearchBar } from './search.js';
@@ -109,8 +109,14 @@ export function mountApp(selector: string): void {
 
   const searchBar = new SearchBar(() => store.getSnapshot());
 
-  const markdownBtn = makeBtn('markdown', 'Markdown', () => exportMarkdown(store.getSnapshot()), 'secondary', 'Export as Markdown');
-  const printBtn    = makeBtn('printer',  'Print / PDF', () => exportPrint(store.getSnapshot()),   'secondary', 'Print or export as PDF');
+  const markdownBtn = makeBtn('markdown', 'Markdown',   () => exportMarkdown(store.getSnapshot()),   'secondary', 'Export as Markdown');
+  const printBtn    = makeBtn('printer',  'Print / PDF', () => exportPrint(store.getSnapshot()),     'secondary', 'Print or export as PDF');
+  const copyHtmlBtn = makeBtn('copy', 'Copy HTML', () => {
+    copyDocumentHtml(store.getSnapshot()).then(
+      () => showToast({ message: 'HTML copied to clipboard' }),
+      () => showToast({ message: 'Copy failed — check browser permissions', variant: 'error' }),
+    );
+  }, 'secondary', 'Copy document as HTML');
 
   const topBarSep = document.createElement('div');
   topBarSep.className = 'app-topbar__sep';
@@ -121,6 +127,7 @@ export function mountApp(selector: string): void {
   topBarActions.appendChild(themeSelect);
   topBarActions.appendChild(topBarSep2);
   topBarActions.appendChild(markdownBtn);
+  topBarActions.appendChild(copyHtmlBtn);
   topBarActions.appendChild(printBtn);
   topBarActions.appendChild(topBarSep);
   topBarActions.appendChild(newBtn);

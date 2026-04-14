@@ -93,6 +93,18 @@ function sectionToHtml(section: Section): string {
   }
 }
 
+export function copyDocumentHtml(state: AppState): Promise<void> {
+  const html = state.documents.map((doc) =>
+    doc.sections.map(sectionToHtml).join('\n')
+  ).join('\n');
+  return navigator.clipboard.write([
+    new ClipboardItem({
+      'text/html':  new Blob([html], { type: 'text/html' }),
+      'text/plain': new Blob([html], { type: 'text/plain' }),
+    }),
+  ]);
+}
+
 function documentToHtml(doc: AppDocument): string {
   const sectionsHtml = doc.sections.map(sectionToHtml).join('\n');
   const status = doc.status ?? 'draft';
