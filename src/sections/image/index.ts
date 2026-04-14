@@ -26,6 +26,7 @@ export const ImagePlugin: SectionPlugin<ImageData> = {
   createEditor(_id, data, onChange) {
     const wrapper = document.createElement('div');
     wrapper.className = 'image-editor';
+    wrapper.addEventListener('paste', (e) => loadFromClipboard(e));
 
     let currentSrc = data.src;
     let currentShapes: Shape[] = data.shapes ?? [];
@@ -93,6 +94,13 @@ export const ImagePlugin: SectionPlugin<ImageData> = {
     updateToolbar();
 
     // ── File helpers ─────────────────────────────────────────────────────────
+    function loadFromClipboard(e: ClipboardEvent): void {
+      const file = Array.from(e.clipboardData?.items ?? [])
+        .find((item) => item.type.startsWith('image/'))
+        ?.getAsFile();
+      if (file) { e.preventDefault(); void loadFile(file); }
+    }
+
     function openFilePicker(): void {
       const input = document.createElement('input');
       input.type = 'file';
@@ -127,7 +135,7 @@ export const ImagePlugin: SectionPlugin<ImageData> = {
         dropzone.innerHTML = `
           ${icon('image')}
           <span class="image-editor__dropzone-label">Drop an image or click to select</span>
-          <span class="image-editor__dropzone-hint">PNG, JPEG, WebP, GIF — resized to fit</span>
+          <span class="image-editor__dropzone-hint">PNG, JPEG, WebP, GIF · or paste from clipboard</span>
         `;
         dropzone.addEventListener('click', openFilePicker);
         dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('is-over'); });
@@ -138,6 +146,8 @@ export const ImagePlugin: SectionPlugin<ImageData> = {
           const file = e.dataTransfer?.files[0];
           if (file?.type.startsWith('image/')) void loadFile(file);
         });
+        dropzone.addEventListener('paste', loadFromClipboard);
+        dropzone.setAttribute('tabindex', '0');
         wrapper.appendChild(dropzone);
       } else {
         wrapper.appendChild(toolbar);
@@ -155,7 +165,6 @@ export const ImagePlugin: SectionPlugin<ImageData> = {
           const file = e.dataTransfer?.files[0];
           if (file?.type.startsWith('image/')) void loadFile(file);
         });
-
         annotLayer = new AnnotationLayer({
           shapes: currentShapes,
           onChange(shapes) {

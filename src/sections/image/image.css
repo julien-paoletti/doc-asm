@@ -22,6 +22,7 @@
 }
 
 .image-editor__dropzone:hover,
+.image-editor__dropzone:focus-visible,
 .image-editor__dropzone.is-over {
   border-color: var(--color-primary-border-hover);
   background: var(--color-primary-bg);
