@@ -57,12 +57,25 @@ export const ArchiePlugin: SectionPlugin<ArchieData> = {
     function mountViewer(): void {
       if (viewer) { viewer.destroy(); viewer = null; }
       if (!currentDiagram) return;
-      const canvas = document.getElementById(canvasId);
+      const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null;
       if (!canvas) return;
       viewer = new ArchieViewer(canvasId, { fitPadding: 40 });
       viewer.load(currentDiagram);
       viewer.fitToContent();
       viewers.set(id, viewer);
+
+      // Resize canvas height to match content's natural aspect ratio,
+      // eliminating empty space above/below that a fixed-height canvas produces.
+      const capturedViewer = viewer;
+      const img = new Image();
+      img.onload = () => {
+        const w = canvas.offsetWidth;
+        if (img.width > 0 && img.height > 0 && w > 0) {
+          canvas.style.height = `${Math.round(w * img.height / img.width)}px`;
+          capturedViewer.fitToContent();
+        }
+      };
+      img.src = viewer.exportImage();
     }
 
     function render(): void {
