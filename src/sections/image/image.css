@@ -53,6 +53,11 @@
 
 /* ── Annotation toolbar ──────────────────────────────────────────────────── */
 .image-editor__toolbar {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -60,8 +65,15 @@
   background: var(--color-surface-2);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  width: fit-content;
-  align-self: center;
+  width: max-content;
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+}
+
+.image-editor__preview:hover .image-editor__toolbar {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .image-editor__toolbar-sep {

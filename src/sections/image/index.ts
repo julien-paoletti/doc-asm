@@ -150,8 +150,6 @@ export const ImagePlugin: SectionPlugin<ImageData> = {
         dropzone.setAttribute('tabindex', '0');
         wrapper.appendChild(dropzone);
       } else {
-        wrapper.appendChild(toolbar);
-
         const preview = document.createElement('div');
         preview.className = 'image-editor__preview';
 
@@ -182,6 +180,7 @@ export const ImagePlugin: SectionPlugin<ImageData> = {
         replaceBtn.innerHTML = `${icon('image')} Replace`;
         replaceBtn.addEventListener('click', openFilePicker);
 
+        preview.appendChild(toolbar);
         preview.appendChild(img);
         preview.appendChild(annotLayer.el);
         preview.appendChild(replaceBtn);
