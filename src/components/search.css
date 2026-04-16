@@ -1,6 +1,6 @@
 .search-bar {
   position: fixed;
-  top: calc(var(--topbar-height) + 12px);
+  top: calc(var(--topbar-height) + 64px);
   right: 20px;
   z-index: 90;
   width: 260px;
