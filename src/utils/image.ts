@@ -1,4 +1,4 @@
-const MAX_WIDTH = 760; // fits inside the A4 document card
+const MAX_WIDTH = 1600; // 2× the editor card width, covers hi-DPI displays
 
 // Detect WebP support once at module load — avoids encoding both formats on every upload
 const supportsWebP: Promise<boolean> = new Promise((resolve) => {
@@ -30,11 +30,11 @@ export async function processImage(file: File): Promise<string> {
 
       let result: string;
       if (webpOk) {
-        result = canvas.toDataURL('image/webp', 0.88);
+        result = canvas.toDataURL('image/webp', 0.92);
       } else {
         result = file.type === 'image/png'
           ? canvas.toDataURL('image/png')
-          : canvas.toDataURL('image/jpeg', 0.88);
+          : canvas.toDataURL('image/jpeg', 0.92);
       }
 
       // Release canvas pixel buffer
