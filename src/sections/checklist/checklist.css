@@ -34,7 +34,7 @@
 .checklist-editor__item {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
+  gap: 6px;
   padding: 3px 4px;
   border-radius: var(--radius-sm);
   cursor: text;
@@ -43,6 +43,34 @@
 
 .checklist-editor__item:hover {
   background: var(--color-primary-bg);
+}
+
+/* ── Drag handle ─────────────────────────────────────────────────────────── */
+.checklist-editor__drag-handle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  margin-top: 3px;
+  color: transparent;
+  cursor: grab;
+  transition: color 0.12s;
+}
+
+.checklist-editor__drag-handle svg {
+  width: 12px;
+  height: 12px;
+}
+
+.checklist-editor__item:hover .checklist-editor__drag-handle {
+  color: var(--color-text-faint);
+}
+
+.checklist-editor__drag-handle:hover {
+  color: var(--color-text-muted);
+}
+
+.checklist-editor__drag-handle:active {
+  cursor: grabbing;
 }
 
 /* ── Custom checkbox ─────────────────────────────────────────────────────── */

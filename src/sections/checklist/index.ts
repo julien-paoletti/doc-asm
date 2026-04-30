@@ -3,6 +3,7 @@ import type { SectionPlugin } from '../../types.js';
 import { icon } from '../../utils/icons.js';
 import { onPasteText } from '../../utils/clipboard.js';
 import { generateId } from '../../utils/id.js';
+import Sortable from 'sortablejs';
 
 export interface ChecklistItem {
   id: string;
@@ -13,6 +14,25 @@ export interface ChecklistItem {
 
 export interface ChecklistData extends Record<string, unknown> {
   items: ChecklistItem[];
+}
+
+// Returns the slice [idx, idx + groupSize) where groupSize includes idx and all
+// immediately-following items whose level is deeper than items[idx].level.
+function itemGroup(items: ChecklistItem[], idx: number): number {
+  const parentLevel = items[idx]?.level ?? 0;
+  let end = idx + 1;
+  while (end < items.length && (items[end]?.level ?? 0) > parentLevel) end++;
+  return end - idx;
+}
+
+// Move a group of `size` items starting at `from` to position `to` (in terms
+// of the visual row index, before the group is removed).
+function moveGroup(items: ChecklistItem[], from: number, size: number, to: number): ChecklistItem[] {
+  const result = [...items];
+  const group = result.splice(from, size);
+  const insertAt = to > from ? to - size + 1 : to;
+  result.splice(insertAt, 0, ...group);
+  return result;
 }
 
 export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
@@ -56,6 +76,12 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
         row.className = 'checklist-editor__item';
         row.style.paddingLeft = `${level * 24 + 4}px`;
 
+
+        // ── Drag handle ──────────────────────────────────────────────────
+        const dragHandle = document.createElement('div');
+        dragHandle.className = 'checklist-editor__drag-handle drag-handle';
+        dragHandle.innerHTML = icon('gripVertical');
+
         // ── Custom checkbox ──────────────────────────────────────────────
         const checkWrap = document.createElement('div');
         checkWrap.className = 'checklist-editor__checkbox-wrap';
@@ -93,7 +119,7 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
           item.checked = checkInput.checked;
           textSpan.classList.toggle('checklist-editor__text--checked', checkInput.checked);
           checkWrap.classList.remove('is-popping');
-          void checkWrap.offsetWidth; // force reflow to restart animation
+          void checkWrap.offsetWidth;
           checkWrap.classList.add('is-popping');
           save();
         });
@@ -127,6 +153,7 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
           }
         });
 
+        row.appendChild(dragHandle);
         row.appendChild(checkWrap);
         row.appendChild(textEl);
         wrapper.appendChild(row);
@@ -135,6 +162,27 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
 
     renderItems();
     updateCounter();
+
+    const sortable = Sortable.create(wrapper, {
+      animation: 150,
+      handle: '.drag-handle',
+      ghostClass: 'sortable-ghost',
+      chosenClass: 'sortable-chosen',
+      dragClass: 'sortable-drag',
+      filter: '.checklist-editor__counter',
+      preventOnFilter: false,
+      onEnd(evt) {
+        const from = evt.oldIndex;
+        const to = evt.newIndex;
+        // Indices include the counter element at index 0 — subtract 1 to get item index
+        if (from === undefined || to === undefined || from === to) return;
+        const fromIdx = from - 1;
+        const toIdx = to - 1;
+        const size = itemGroup(items, fromIdx);
+        items = moveGroup(items, fromIdx, size, toIdx);
+        save();
+      },
+    });
 
     return {
       el: wrapper,
@@ -145,6 +193,9 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
         items = d.items.length ? d.items.map((i) => ({ ...i })) : [{ id: generateId(), text: '', checked: false, level: 0 }];
         renderItems();
         updateCounter();
+      },
+      destroy() {
+        sortable.destroy();
       },
     };
   },
