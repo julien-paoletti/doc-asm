@@ -46,7 +46,7 @@ export class SectionEditor {
     controls.appendChild(deleteBtn);
 
     const plugin = getPlugin(section.type);
-    const { el: contentEl, focusTitle, update, destroy } = plugin.createEditor(section.id, section.data as never, (patch) => {
+    const { el: contentEl, badge, focusTitle, update, destroy } = plugin.createEditor(section.id, section.data as never, (patch) => {
       store.updateSectionData(documentId, section.id, patch as Record<string, unknown>);
     });
     this.focusTitle = focusTitle;
@@ -56,6 +56,7 @@ export class SectionEditor {
 
     this.el.appendChild(dragHandle);
     this.el.appendChild(contentEl);
+    if (badge) this.el.appendChild(badge);
     this.el.appendChild(controls);
   }
 

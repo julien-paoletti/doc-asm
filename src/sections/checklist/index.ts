@@ -66,7 +66,6 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
 
     const counter = document.createElement('div');
     counter.className = 'checklist-editor__counter';
-    wrapper.appendChild(counter);
 
     let items: ChecklistItem[] = data.items.length
       ? data.items.map((i) => ({ ...i }))
@@ -86,7 +85,6 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
 
     function renderItems(): void {
       wrapper.innerHTML = '';
-      wrapper.appendChild(counter);
 
       items.forEach((item, idx) => {
         const level = item.level ?? 0;
@@ -242,6 +240,7 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
 
     return {
       el: wrapper,
+      badge: counter,
       focusTitle() {
         wrapper.querySelector<HTMLElement>('.checklist-editor__text')?.focus();
       },
