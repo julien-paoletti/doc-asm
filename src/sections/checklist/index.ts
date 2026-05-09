@@ -174,13 +174,22 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
       onEnd(evt) {
         const from = evt.oldIndex;
         const to = evt.newIndex;
-        // Indices include the counter element at index 0 — subtract 1 to get item index
         if (from === undefined || to === undefined || from === to) return;
         const fromIdx = from - 1;
-        const toIdx = to - 1;
         const size = itemGroup(items, fromIdx);
-        items = moveGroup(items, fromIdx, size, toIdx);
-        save();
+        // SortableJS only moves the parent row; newIndex is relative to the full DOM
+        // including children that stayed put. Clamp so toIdx can't land inside the group.
+        const naiveToIdx = to - 1;
+        const toIdx = naiveToIdx > fromIdx && naiveToIdx < fromIdx + size
+          ? fromIdx + size - 1
+          : naiveToIdx;
+        if (toIdx !== fromIdx) {
+          items = moveGroup(items, fromIdx, size, toIdx);
+          save();
+          // Defer re-render so SortableJS finishes its own DOM cleanup first,
+          // otherwise it overwrites the correct positions of child rows.
+          setTimeout(renderItems, 0);
+        }
       },
     });
 
