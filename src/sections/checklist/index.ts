@@ -95,7 +95,6 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
         row.className = 'checklist-editor__item';
         row.style.paddingLeft = `${level * 24 + 4}px`;
 
-
         // ── Drag handle ──────────────────────────────────────────────────
         const dragHandle = document.createElement('div');
         dragHandle.className = 'checklist-editor__drag-handle drag-handle';
@@ -184,9 +183,26 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
           }
         });
 
+        // ── Delete button ─────────────────────────────────────────────────
+        const deleteBtn = document.createElement('button');
+        deleteBtn.type = 'button';
+        deleteBtn.className = 'checklist-editor__delete-btn';
+        deleteBtn.title = 'Delete task';
+        deleteBtn.innerHTML = icon('trash');
+        deleteBtn.addEventListener('click', () => {
+          const size = itemGroup(items, idx);
+          items.splice(idx, size);
+          if (items.length === 0) items.push({ id: generateId(), text: '', checked: false, level: 0 });
+          if (idx > 0) syncParents(items, Math.min(idx - 1, items.length - 1));
+          save();
+          renderItems();
+          wrapper.querySelectorAll<HTMLElement>('.checklist-editor__text')[Math.max(0, idx - 1)]?.focus();
+        });
+
         row.appendChild(dragHandle);
         row.appendChild(checkWrap);
         row.appendChild(textEl);
+        row.appendChild(deleteBtn);
         wrapper.appendChild(row);
       });
     }

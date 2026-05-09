@@ -208,3 +208,31 @@
 .checklist-editor__text--checked::after {
   transform: scaleX(1);
 }
+
+/* ── Delete button ───────────────────────────────────────────────────────── */
+.checklist-editor__delete-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 3px;
+  border-radius: var(--radius-sm);
+  color: transparent;
+  transition: color 0.12s, background 0.12s;
+}
+
+.checklist-editor__delete-btn svg {
+  width: 12px;
+  height: 12px;
+}
+
+.checklist-editor__item:hover .checklist-editor__delete-btn {
+  color: var(--color-text-faint);
+}
+
+.checklist-editor__item:hover .checklist-editor__delete-btn:hover {
+  color: var(--color-danger);
+  background: var(--color-danger-bg);
+}
