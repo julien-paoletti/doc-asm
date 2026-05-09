@@ -29,14 +29,20 @@ export class SectionEditor {
     duplicateBtn.title = 'Duplicate section';
     duplicateBtn.innerHTML = icon('copyPlus');
     duplicateBtn.addEventListener('click', () => store.duplicateSection(documentId, section.id));
-    controls.appendChild(duplicateBtn);
+
+    const sep = document.createElement('div');
+    sep.className = 'section-controls-sep';
+    sep.setAttribute('aria-hidden', 'true');
 
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
     deleteBtn.className = 'section-btn section-delete-btn';
     deleteBtn.title = 'Delete section';
-    deleteBtn.innerHTML = icon('x');
+    deleteBtn.innerHTML = icon('trash');
     deleteBtn.addEventListener('click', () => store.removeSection(documentId, section.id));
+
+    controls.appendChild(duplicateBtn);
+    controls.appendChild(sep);
     controls.appendChild(deleteBtn);
 
     const plugin = getPlugin(section.type);

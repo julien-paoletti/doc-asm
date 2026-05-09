@@ -56,7 +56,7 @@ export class DocumentEditor {
 
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
-    deleteBtn.className = 'section-btn section-delete-btn document-delete-btn';
+    deleteBtn.className = 'document-delete-btn';
     deleteBtn.title = 'Delete document';
     deleteBtn.innerHTML = icon('x');
     deleteBtn.addEventListener('click', () => store.removeDocument(doc.id));

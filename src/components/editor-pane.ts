@@ -35,8 +35,37 @@ export class EditorPane {
       }
     });
 
+    // Show section controls for whichever section's vertical band the mouse is in,
+    // even when the cursor is to the right of the section card.
+    let rafPending = false;
+    this.el.addEventListener('mousemove', (e) => {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => { rafPending = false; this.updateActiveSection(e.clientY); });
+    });
+    this.el.addEventListener('mouseleave', () => this.clearActiveSection());
+
     this.el.appendChild(this.documentsContainer);
     this.el.appendChild(addDocBtn);
+  }
+
+  private activeSection: HTMLElement | null = null;
+
+  private updateActiveSection(clientY: number): void {
+    let match: HTMLElement | null = null;
+    for (const el of this.el.querySelectorAll<HTMLElement>('.section-editor')) {
+      const { top, bottom } = el.getBoundingClientRect();
+      if (clientY >= top && clientY <= bottom) { match = el; break; }
+    }
+    if (match === this.activeSection) return;
+    this.activeSection?.classList.remove('is-active');
+    this.activeSection = match;
+    match?.classList.add('is-active');
+  }
+
+  private clearActiveSection(): void {
+    this.activeSection?.classList.remove('is-active');
+    this.activeSection = null;
   }
 
   private createDocumentEditor(doc: AppDocument): DocumentEditor {

@@ -131,8 +131,30 @@
   top: -8px;
   right: -8px;
   z-index: 1;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-surface);
+  border: 1.5px solid var(--color-border);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
+  color: var(--color-danger);
   opacity: 0;
   transition: opacity 0.15s, background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+}
+
+.document-delete-btn svg {
+  width: 13px;
+  height: 13px;
+}
+
+.document-delete-btn:hover {
+  background: var(--color-danger);
+  border-color: var(--color-danger);
+  color: #fff;
+  transform: scale(1.15);
 }
 
 .document-editor:hover .document-delete-btn {
@@ -217,7 +239,7 @@
 }
 
 
-.section-editor:hover {
+.section-editor.is-active {
   border-color: var(--color-primary-hover);
 }
 
@@ -241,7 +263,7 @@
   transition: color 0.15s, background 0.15s, border-color 0.15s;
 }
 
-.section-editor:hover .section-drag-handle {
+.section-editor.is-active .section-drag-handle {
   color: var(--color-primary-icon);
   background: var(--color-surface);
   border-color: var(--color-primary-border-hover);
@@ -255,64 +277,68 @@
   cursor: grabbing;
 }
 
-/* ── Section controls (delete) ──────────────────────────────────────────── */
+/* ── Section controls toolbar ───────────────────────────────────────────── */
 .section-controls {
   position: absolute;
-  top: -8px;
-  right: -8px;
+  top: -1px;
+  right: -68px;
   z-index: 10;
   display: flex;
+  flex-direction: row;
   align-items: center;
+  gap: 0;
+  padding: 2px;
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .10);
   opacity: 0;
   transition: var(--transition-controls);
   pointer-events: none;
 }
 
-.section-editor:hover .section-controls {
+.section-editor.is-active .section-controls {
   opacity: 1;
   pointer-events: auto;
 }
 
-.section-btn svg {
-  width: 13px;
-  height: 13px;
+.section-controls-sep {
+  width: 1px;
+  height: 16px;
+  background: var(--color-border);
+  margin: 0 2px;
+  flex-shrink: 0;
 }
 
 .section-btn {
   width: 24px;
   height: 24px;
-  border-radius: 50%;
-  background: var(--color-surface);
-  border: 1.5px solid var(--color-border);
-  box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
-  transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.15s;
+  border-radius: var(--radius-sm);
   display: flex;
   align-items: center;
   justify-content: center;
+  color: var(--color-text-muted);
+  transition: background 0.12s, color 0.12s;
+}
+
+.section-btn svg {
+  width: 14px;
+  height: 14px;
 }
 
 .section-btn:hover {
-  color: #fff;
-  transform: scale(1.15);
-}
-
-.section-delete-btn {
-  color: var(--color-danger);
+  background: var(--color-surface-3);
+  color: var(--color-text);
 }
 
 .section-delete-btn:hover {
-  background: var(--color-danger);
-  border-color: var(--color-danger);
-}
-
-.section-duplicate-btn {
-  color: var(--color-primary);
-  border-color: var(--color-primary-border);
+  background: var(--color-danger-bg);
+  color: var(--color-danger);
 }
 
 .section-duplicate-btn:hover {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: var(--color-primary-bg-deep);
+  color: var(--color-primary);
 }
 
 /* ── Add section bar ────────────────────────────────────────────────────── */
