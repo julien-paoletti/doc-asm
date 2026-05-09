@@ -25,6 +25,25 @@ function itemGroup(items: ChecklistItem[], idx: number): number {
   return end - idx;
 }
 
+// Sync a parent's checked state after one of its children changed.
+// Walks up the hierarchy so cascading parents (grandparent, etc.) are also updated.
+function syncParents(items: ChecklistItem[], changedIdx: number): void {
+  let idx = changedIdx;
+  while (idx > 0) {
+    const childLevel = items[idx]?.level ?? 0;
+    if (childLevel === 0) break;
+    let parentIdx = -1;
+    for (let i = idx - 1; i >= 0; i--) {
+      if ((items[i]?.level ?? 0) < childLevel) { parentIdx = i; break; }
+    }
+    if (parentIdx === -1) break;
+    const groupSize = itemGroup(items, parentIdx);
+    const allDone = items.slice(parentIdx + 1, parentIdx + groupSize).every((it) => it.checked);
+    items[parentIdx]!.checked = allDone;
+    idx = parentIdx;
+  }
+}
+
 // Move a group of `size` items starting at `from` to position `to` (in terms
 // of the visual row index, before the group is removed).
 function moveGroup(items: ChecklistItem[], from: number, size: number, to: number): ChecklistItem[] {
@@ -121,6 +140,18 @@ export const ChecklistPlugin: SectionPlugin<ChecklistData> = {
           checkWrap.classList.remove('is-popping');
           void checkWrap.offsetWidth;
           checkWrap.classList.add('is-popping');
+          syncParents(items, idx);
+          // Update parent checkboxes in the DOM without a full re-render
+          const allInputs = wrapper.querySelectorAll<HTMLInputElement>('.checklist-editor__checkbox-input');
+          const allTexts = wrapper.querySelectorAll<HTMLElement>('.checklist-editor__text');
+          items.forEach((it, i) => {
+            const input = allInputs[i];
+            const text = allTexts[i];
+            if (input && input.checked !== it.checked) {
+              input.checked = it.checked;
+              text?.classList.toggle('checklist-editor__text--checked', it.checked);
+            }
+          });
           save();
         });
 
